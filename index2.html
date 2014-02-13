@@ -4,6 +4,7 @@
 <script src="http://bnchdrff.github.io/d3.js/plugins/jsonp.js"></script>
 <script src="dist/libs/jquery.js"></script>
 <script src="dist/jstree.min.js"></script>
+<script src="https://rawgithub.com/lodash/lodash/2.4.1/dist/lodash.min.js"></script>
 <link rel="stylesheet" href="dist/themes/default/style.min.css" />
 <style>
 
@@ -92,6 +93,15 @@ d3.jsonp('http://chartercomplex-server.herokuapp.com/nodes.json?callback={callba
       nodes: got_some_nodes.nodes,
       links: got_some_edges.edges
     };
+
+    var nodeIds=_.pluck(data.nodes,'id');
+    data.links.forEach(function(l){
+
+     l.source=nodeIds.indexOf(l.source);
+
+     l.target=nodeIds.indexOf(l.target);
+
+    })
     doEverything(data);
   });
 });
