@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <script src="http://d3js.org/d3.v2.js?2.9.1"></script>
+<script src="http://bnchdrff.github.io/d3.js/plugins/jsonp.js"></script>
 <script src="dist/libs/jquery.js"></script>
 <script src="dist/jstree.min.js"></script>
 <link rel="stylesheet" href="dist/themes/default/style.min.css" />
@@ -85,6 +86,17 @@ margin-top:0;
 	</div> <!--main-->
 
 			<script>
+d3.jsonp('http://chartercomplex-server.herokuapp.com/nodes.json?callback={callback}', function(got_some_nodes) {
+  d3.jsonp('http://chartercomplex-server.herokuapp.com/edges.json?callback={callback}', function(got_some_edges) {
+    data = {
+      nodes: got_some_nodes.nodes,
+      links: got_some_edges.edges
+    };
+    doEverything(data);
+  });
+});
+
+function doEverything(data) {
   $('#treeview').jstree({ 'core' : {
       'data' : [
          {"id" : "foundation", "parent" : "#", "text" : "Foundation" },
@@ -133,121 +145,6 @@ margin-top:0;
 			// $('#jstree_demo_div').on("changed.jstree", function (e, data) {
   	// 		console.log(data.selected);
 			// });
-
-var data = {
-    "nodes": [
-        {
-           "id": "node_0",
-           "name": "Education Trust",
-           "t": "organization"
-        },
-       {
-           "id": "node_1",
-           "name": "Amber Arellano",
-           "t": "person"
-        },
-          {
-           "id": "node_3",
-           "name": "Bill and Melinda Gates Foundation",
-           "t": "foundation"
-        },
-          {
-           "id": "node_4",
-           "name": "Kresge Foundation",
-           "t": "foundation"
-        },
-
-        {
-           "id": "node_5",
-           "name": "Ford Foundation",
-           "t": "foundation"
-        },
-          {
-           "id": "node_6",
-           "name": "Skillman Foundation",
-           "t": "foundation"
-        },
-        {
-           "id": "node_7",
-           "name": "Metlife",
-           "t": "foundation"
-        },
-          {
-           "id": "node_8",
-           "name": "W.K. Kellogg Foundation",
-           "t": "foundation"
-        },
-         {
-           "id": "node_9",
-           "name": "Broad Foundation",
-           "t": "foundation"
-        },
-         {
-           "id": "node_10",
-           "name": "Education Achievement Authority (EAA) District",
-           "t": "organization"
-        },
-           {
-           "id": "node_11",
-           "name": "Teach for America - Detroit",
-           "t": "organization"
-        },
-           {
-           "id": "node_12",
-           "name": "Michigan Education Excellence Foundation (MEEF)",
-           "t": "foundation"
-        },
-         {
-           "id": "node_13",
-           "name": "John Covington",
-           "t": "person"
-        }
-    ],
-
-    "links": [
-        {
-            "source": 2,
-            "target": 0
-        },
-         {
-            "source": 0,
-            "target": 1
-        },
-         {
-            "source": 3,
-            "target": 0
-        },
-          {
-            "source": 4,
-            "target": 0
-        },
-         {
-            "source": 5,
-            "target": 0
-        },
-         {
-            "source": 6,
-            "target": 0
-        },
-          {
-            "source": 7,
-            "target": 0
-        },
-         {
-            "source": 8,
-            "target": 0
-        },
-         {
-            "source": 9,
-            "target": 10
-        },
-                 {
-            "source": 9,
-            "target": 11
-        },
-
-    ]
-};
 
 var width = 500,
     height = 500;
@@ -355,7 +252,7 @@ function mouseout() {
 }
 
 	// 
-
+}
 
 			</script>
 	</body>
