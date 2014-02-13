@@ -131,15 +131,15 @@ function doEverything(data) {
           }
           else
           { 
-              if(d.t=="organization")
+              if(d.t=="Organization")
               {
                 colorStr='FF0000';
               }
-              else if(d.t=="foundation")
+              else if(d.t=="Foundation")
               {
                 colorStr= '#00FF00';
               }
-              else if(d.t=="person")
+              else if(d.t=="Person")
               {
                 colorStr= '#0000FF';
               }
@@ -196,15 +196,15 @@ var node = svg.selectAll(".node")
     .attr("d",  d3.svg.symbol().type(function(d)
     	{
     		var typeStr;
-    		if(d.t=="organization")
+    		if(d.t=="Organization")
 	    	{
 	    		typeStr="triangle-up";
 	    	}
-	    	else if(d.t=="foundation")
+	    	else if(d.t=="Foundation")
 	    	{
 	    		typeStr= "circle";
 	    	}
-	    	else if(d.t=="person")
+	    	else if(d.t=="Person")
 	    	{
 	    		typeStr= "square";
 	    	}
@@ -214,15 +214,15 @@ var node = svg.selectAll(".node")
     .style("fill", function (d) { 
 
     	var colorStr;
-    		if(d.t=="organization")
+    		if(d.t=="Organization")
 	    	{
 	    		colorStr='FF0000';
 	    	}
-	    	else if(d.t=="foundation")
+	    	else if(d.t=="Foundation")
 	    	{
 	    		colorStr= '#00FF00';
 	    	}
-	    	else if(d.t=="person")
+	    	else if(d.t=="Person")
 	    	{
 	    		colorStr= '#0000FF';
 	    	}
