@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<script src="http://d3js.org/d3.v2.js?2.9.1"></script>
+<script src="dist/libs/jquery.js"></script>
+<script src="dist/jstree.min.js"></script>
+<link rel="stylesheet" href="dist/themes/default/style.min.css" />
+<style>
+
+.link {
+  fill:#666;
+  stroke: #666;
+  stroke-width: 1.5px;
+}
+
+.node circle {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+text {
+  font: 10px sans-serif;
+  pointer-events: none;
+}
+
+#main
+{
+	width:90%;
+}
+
+#treeContainer
+{
+ float:left;
+ width:350px;
+ margin-left: 100px;
+ margin-top: 50px;
+}
+
+#graphContainer
+{
+margin-top:0;
+ padding-top:0;
+ max-width: 36em;
+ margin-left: 360px;
+}
+
+</style>
+	<body>
+	<div id="main">
+		<div id="treeContainer">
+			<div id="treeview">
+				 <!--<ul>
+				    <li>Foundation
+					    <ul>
+					    	<li>Bill and Melinda Gates Foundation</li>
+		        			<li>Kresge Foundation</li>
+					    	<li>Walton Family Foundation</li>
+					    	<li>Ford Foundation Foundation</li>
+					    	<li>Skillman Foundation Foundation</li>
+					    	<li> W.K. Kellogg Foundation</li>
+					    	 <li>Broad Foundation Foundation</li>
+						</ul>
+					</li>
+					<li>Organization
+					    <ul>
+					    	<li>Education Trust</li>
+		        			<li>Metlife</li>
+					    	<li>Root node 2</li>
+						</ul>
+					</li>
+					<li>Person
+					    <ul>
+					    	<li>Amber Arellano</li>
+		        			<li>Child node 2</li>
+						</ul>
+					</li>
+	  			</ul> -->
+			</div><!--tree-->
+		</div><!--treeContainer-->
+
+
+		<div id="graphContainer">
+			<div id="graph"></div> <!--graph-->
+	
+		</div> <!--graphContainer-->
+	</div> <!--main-->
+
+			<script>
+  $('#treeview').jstree({ 'core' : {
+      'data' : [
+         {"id" : "foundation", "parent" : "#", "text" : "Foundation" },
+         { "id" : "node_3", "parent" : "foundation", "text" : "Bill and Melinda Gates Foundation" },
+         { "id" : "node_5", "parent" : "foundation", "text" : "Ford Foundation Foundation" },
+         { "id" : "node_6", "parent" : "foundation", "text" : "Skillman Foundation Foundation" },
+      ]
+  } });
+
+  $('#treeview').on('select_node.jstree', function (e, data) {
+      console.log("in console");
+      console.log(data);
+      var selected_node=data.selected[0];
+      d3.selectAll(".node").style("fill", function (d) {
+         
+         var colorStr;
+          if(d.id==selected_node)
+         {
+            console.log(d.id);
+            console.log(d);
+            colorStr= '#FFCC33';
+          }
+          else
+          { 
+              if(d.t=="organization")
+              {
+                colorStr='FF0000';
+              }
+              else if(d.t=="foundation")
+              {
+                colorStr= '#00FF00';
+              }
+              else if(d.t=="person")
+              {
+                colorStr= '#0000FF';
+              }
+              
+          }
+
+          return colorStr;
+
+      })
+   
+    })
+
+			// $('#jstree_demo_div').on("changed.jstree", function (e, data) {
+  	// 		console.log(data.selected);
+			// });
+
+var data = {
+    "nodes": [
+        {
+           "id": "node_0",
+           "name": "Education Trust",
+           "t": "organization"
+        },
+       {
+           "id": "node_1",
+           "name": "Amber Arellano",
+           "t": "person"
+        },
+          {
+           "id": "node_3",
+           "name": "Bill and Melinda Gates Foundation",
+           "t": "foundation"
+        },
+          {
+           "id": "node_4",
+           "name": "Kresge Foundation",
+           "t": "foundation"
+        },
+
+        {
+           "id": "node_5",
+           "name": "Ford Foundation",
+           "t": "foundation"
+        },
+          {
+           "id": "node_6",
+           "name": "Skillman Foundation",
+           "t": "foundation"
+        },
+        {
+           "id": "node_7",
+           "name": "Metlife",
+           "t": "foundation"
+        },
+          {
+           "id": "node_8",
+           "name": "W.K. Kellogg Foundation",
+           "t": "foundation"
+        },
+         {
+           "id": "node_9",
+           "name": "Broad Foundation",
+           "t": "foundation"
+        },
+         {
+           "id": "node_10",
+           "name": "Education Achievement Authority (EAA) District",
+           "t": "organization"
+        },
+           {
+           "id": "node_11",
+           "name": "Teach for America - Detroit",
+           "t": "organization"
+        },
+           {
+           "id": "node_12",
+           "name": "Michigan Education Excellence Foundation (MEEF)",
+           "t": "foundation"
+        },
+         {
+           "id": "node_13",
+           "name": "John Covington",
+           "t": "person"
+        }
+    ],
+
+    "links": [
+        {
+            "source": 2,
+            "target": 0
+        },
+         {
+            "source": 0,
+            "target": 1
+        },
+         {
+            "source": 3,
+            "target": 0
+        },
+          {
+            "source": 4,
+            "target": 0
+        },
+         {
+            "source": 5,
+            "target": 0
+        },
+         {
+            "source": 6,
+            "target": 0
+        },
+          {
+            "source": 7,
+            "target": 0
+        },
+         {
+            "source": 8,
+            "target": 0
+        },
+         {
+            "source": 9,
+            "target": 10
+        },
+                 {
+            "source": 9,
+            "target": 11
+        },
+
+    ]
+};
+
+var width = 500,
+    height = 500;
+
+var force = d3.layout.force()
+    .nodes(d3.values(data.nodes))
+    .links(data.links)
+    .size([width, height])
+    .linkDistance(100)
+    .charge(-300)
+    .on("tick", tick)
+    .start();
+
+var svg = d3.select("#graph").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+var link = svg.selectAll(".link")
+    .data(force.links())
+  .enter().append("line")
+    .attr("class", "link");
+
+//dont know why it is not working 
+link.append("text")
+.style("fill", "black")
+    .attr("x", function(d) { return (d.source.y + d.target.y) / 2; })
+    .attr("y", function(d) { return (d.source.x + d.target.x) / 2; })
+    .attr("text-anchor", "middle")
+    .text(function(d) {
+        return d.type;
+    });
+
+var node = svg.selectAll(".node")
+    .append('g') .data(force.nodes());
+  
+  node.enter().append("g")
+  .append("path")
+    .attr("class", "node")
+    .attr("d",  d3.svg.symbol().type(function(d)
+    	{
+    		var typeStr;
+    		if(d.t=="organization")
+	    	{
+	    		typeStr="triangle-up";
+	    	}
+	    	else if(d.t=="foundation")
+	    	{
+	    		typeStr= "circle";
+	    	}
+	    	else if(d.t=="person")
+	    	{
+	    		typeStr= "square";
+	    	}
+	    	return typeStr;
+    	})
+    )
+    .style("fill", function (d) { 
+
+    	var colorStr;
+    		if(d.t=="organization")
+	    	{
+	    		colorStr='FF0000';
+	    	}
+	    	else if(d.t=="foundation")
+	    	{
+	    		colorStr= '#00FF00';
+	    	}
+	    	else if(d.t=="person")
+	    	{
+	    		colorStr= '#0000FF';
+	    	}
+	    	return colorStr;
+		})
+      	
+   .on("mouseover", mouseover)
+    .on("mouseout", mouseout)
+    .call(force.drag);
+ node.append("text")
+ 	.style("fill", "black")
+     .attr("x", 12)
+     .attr("dy", ".35em")
+    .text(function(d) { return d.name; });
+
+function tick() {
+  link
+      .attr("x1", function(d) { return d.source.x; })
+      .attr("y1", function(d) { return d.source.y; })
+      .attr("x2", function(d) { return d.target.x; })
+      .attr("y2", function(d) { return d.target.y; });
+
+  node
+      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+}
+
+function mouseover() {
+  d3.select(this).select("circle").transition()
+      .duration(750)
+      .attr("r", 16);
+}
+
+function mouseout() {
+  d3.select(this).select("circle").transition()
+      .duration(750)
+      .attr("r", 8);
+}
+
+	// 
+
+
+			</script>
+	</body>
+</html>
+
