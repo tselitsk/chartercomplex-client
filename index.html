@@ -50,32 +50,6 @@ margin-top:0;
 	<div id="main">
 		<div id="treeContainer">
 			<div id="treeview">
-				 <!--<ul>
-				    <li>Foundation
-					    <ul>
-					    	<li>Bill and Melinda Gates Foundation</li>
-		        			<li>Kresge Foundation</li>
-					    	<li>Walton Family Foundation</li>
-					    	<li>Ford Foundation Foundation</li>
-					    	<li>Skillman Foundation Foundation</li>
-					    	<li> W.K. Kellogg Foundation</li>
-					    	 <li>Broad Foundation Foundation</li>
-						</ul>
-					</li>
-					<li>Organization
-					    <ul>
-					    	<li>Education Trust</li>
-		        			<li>Metlife</li>
-					    	<li>Root node 2</li>
-						</ul>
-					</li>
-					<li>Person
-					    <ul>
-					    	<li>Amber Arellano</li>
-		        			<li>Child node 2</li>
-						</ul>
-					</li>
-	  			</ul> -->
 			</div><!--tree-->
 		</div><!--treeContainer-->
 
@@ -191,15 +165,13 @@ var link = svg.selectAll(".link")
   .enter().append("line")
     .attr("class", "link");
 
-//dont know why it is not working 
-link.append("text")
-.style("fill", "black")
-    .attr("x", function(d) { return (d.source.y + d.target.y) / 2; })
-    .attr("y", function(d) { return (d.source.x + d.target.x) / 2; })
-    .attr("text-anchor", "middle")
-    .text(function(d) {
-        return d.type;
-    });
+  var labels = svg.selectAll('text')
+    .data(data.links)
+  .enter().append('text')
+    .attr("x", function(d) { return (d.source.y + d.target.y) / 2; }) 
+    .attr("y", function(d) { return (d.source.x + d.target.x) / 2; }) 
+    .attr("text-anchor", "middle") 
+    .text(function(d) {return "label";});
 
 var node = svg.selectAll(".node")
     .append('g') .data(force.nodes());
@@ -261,6 +233,9 @@ function tick() {
 
   node
       .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+      labels.attr("x", function(d) { return (d.source.x + d.target.x) / 2; }) 
+        .attr("y", function(d) { return (d.source.y + d.target.y) / 2; }) 
 }
 
 function mouseover() {
