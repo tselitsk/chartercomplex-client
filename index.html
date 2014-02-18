@@ -171,7 +171,7 @@ var link = svg.selectAll(".link")
     .attr("x", function(d) { return (d.source.y + d.target.y) / 2; }) 
     .attr("y", function(d) { return (d.source.x + d.target.x) / 2; }) 
     .attr("text-anchor", "middle") 
-    .text(function(d) {return "label";});
+    .text(function(d) {return d.label;});
 
 var node = svg.selectAll(".node")
     .append('g') .data(force.nodes());
