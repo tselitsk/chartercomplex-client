@@ -26,25 +26,29 @@ text {
 
 #main
 {
-	width:90%;
+	width:100%;
 }
 
 #treeContainer
 {
+ display: inline;
  float:left;
  width:350px;
- margin-left: 100px;
- margin-top: 50px;
+ margin-left: 20px;
+ margin-top: 0;
 }
 
 #graphContainer
 {
-margin-top:0;
+ display: inline;
+ margin-top:0;
  padding-top:0;
- max-width: 36em;
- margin-left: 360px;
+ margin-left: 0;
 }
 
+#graph {
+  display: inline;
+}
 </style>
 	<body>
 	<div id="main">
@@ -143,7 +147,7 @@ function tree(data) {
 
 function doEverything(data) {
 
-  var width = 500,
+  var width = 600,
       height = 500;
 
   var force = d3.layout.force()
@@ -256,4 +260,3 @@ function doEverything(data) {
 	</body>
 </html>
 
-I'M A CHANGE YOU SHOULDN'T AGREE TO
