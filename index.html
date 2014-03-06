@@ -104,24 +104,18 @@ function doEverything(data) {
       'data' : categories
   } });
 
-  $('#treeview').on('select_node.jstree', function (e, data) {
-      console.log("in console");
-      console.log(data);
-      var selected_node=data.selected[0];
+  $('#treeview').on('select_node.jstree', function (e, jstree_node) {
       d3.selectAll(".node").style("fill", function (d) {
-         
          var colorStr;
-          if(d.id==selected_node)
+          if(d.name==jstree_node.node.text)
          {
-            console.log(d.id);
-            console.log(d);
             colorStr= '#FFCC33';
           }
           else
           { 
               if(d.t=="Organization")
               {
-                colorStr='FF0000';
+                colorStr='#FF0000';
               }
               else if(d.t=="Foundation")
               {
