@@ -88,10 +88,13 @@ d3.jsonp('http://chartercomplex-server.herokuapp.com/nodes.json?callback={callba
 function tree(data) {
 
   // build jstree data:
+  var cat_names = _.uniq(_.map(_.pluck(data.nodes, 't'), function(name) {
+    return name.trim().toLowerCase();
+  }));
   var categories = [];
-  _.each(_.uniq(_.pluck(data.nodes, 't')), function(category) {
+  _.each(cat_names, function(category) {
     categories.push({
-      "id" : category,
+      "id" : category.trim().toLowerCase(),
       "parent" : "#",
       "text" : category
     });
@@ -100,7 +103,7 @@ function tree(data) {
   _.each(data.nodes, function(node) {
     categories.push({
       'id': node.id,
-      'parent': node.t,
+      'parent': node.t.trim().toLowerCase(),
       'text': node.name
     });
   });
