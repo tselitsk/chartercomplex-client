@@ -67,7 +67,7 @@ text {
 			<script>
 d3.jsonp('http://chartercomplex-server.herokuapp.com/nodes.json?callback={callback}', function(got_some_nodes) {
   d3.jsonp('http://chartercomplex-server.herokuapp.com/edges.json?callback={callback}', function(got_some_edges) {
-    data = {
+    window.data = {
       nodes: got_some_nodes.nodes,
       links: got_some_edges.edges
     };
@@ -85,13 +85,20 @@ d3.jsonp('http://chartercomplex-server.herokuapp.com/nodes.json?callback={callba
   });
 });
 
+function normalize_cat_name(name) {
+  return name.trim().toLowerCase();
+}
+
 function tree(data) {
 
   // build jstree data:
+  var cat_names = _.uniq(_.map(_.pluck(data.nodes, 't'), function(name) {
+    return normalize_cat_name(name);
+  }));
   var categories = [];
-  _.each(_.uniq(_.pluck(data.nodes, 't')), function(category) {
+  _.each(cat_names, function(category) {
     categories.push({
-      "id" : category,
+      "id" : normalize_cat_name(category),
       "parent" : "#",
       "text" : category
     });
@@ -100,7 +107,7 @@ function tree(data) {
   _.each(data.nodes, function(node) {
     categories.push({
       'id': node.id,
-      'parent': node.t,
+      'parent': normalize_cat_name(node.t),
       'text': node.name
     });
   });
