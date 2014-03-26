@@ -85,16 +85,20 @@ d3.jsonp('http://chartercomplex-server.herokuapp.com/nodes.json?callback={callba
   });
 });
 
+function normalize_cat_name(name) {
+  return name.trim().toLowerCase();
+}
+
 function tree(data) {
 
   // build jstree data:
   var cat_names = _.uniq(_.map(_.pluck(data.nodes, 't'), function(name) {
-    return name.trim().toLowerCase();
+    return normalize_cat_name(name);
   }));
   var categories = [];
   _.each(cat_names, function(category) {
     categories.push({
-      "id" : category.trim().toLowerCase(),
+      "id" : normalize_cat_name(category),
       "parent" : "#",
       "text" : category
     });
@@ -103,7 +107,7 @@ function tree(data) {
   _.each(data.nodes, function(node) {
     categories.push({
       'id': node.id,
-      'parent': node.t.trim().toLowerCase(),
+      'parent': normalize_cat_name(node.t),
       'text': node.name
     });
   });
