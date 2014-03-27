@@ -89,6 +89,25 @@ function normalize_cat_name(name) {
   return name.trim().toLowerCase();
 }
 
+/**
+ * Gets neighbors of a node, based on its edges.
+ *
+ * @todo degrees
+ */
+function get_neighbors(id, degree, edges) {
+  return _.uniq(
+    _.reduce(edges, function(memo, edge) {
+      if (edge.source.id == id) {
+        memo.push(edge.target.id);
+      }
+      if (edge.target.id == id) {
+        memo.push(edge.source.id);
+      }
+      return memo;
+    }, [])
+  );
+}
+
 function tree(data) {
 
   // build jstree data:
