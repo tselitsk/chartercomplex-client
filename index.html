@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<script src="http://d3js.org/d3.v2.js?2.9.1"></script>
+<script src="d3.v3.js"></script>
 <script src="http://bnchdrff.github.io/d3.js/plugins/jsonp.js"></script>
 <script src="dist/libs/jquery.js"></script>
 <script src="dist/jstree.min.js"></script>
@@ -268,15 +268,16 @@ function doEverything(data) {
   }
 
   function mouseover() {
-    d3.select(this).select("circle").transition()
+    debugger;
+    d3.select(this).transition()
         .duration(750)
-        .attr("r", 16);
+        .attr('transform', 'scale(2)');
   }
 
   function mouseout() {
-    d3.select(this).select("circle").transition()
+    d3.select(this).transition()
         .duration(750)
-        .attr("r", 8);
+        .attr('transform', 'scale(1)');
   }
 
 	// 
