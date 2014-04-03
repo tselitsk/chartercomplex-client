@@ -26,7 +26,7 @@ text {
 
 #main
 {
-	width:100%;
+  width:100%;
 }
 
 #treeContainer
@@ -50,21 +50,21 @@ text {
   display: inline;
 }
 </style>
-	<body>
-	<div id="main">
-		<div id="treeContainer">
-			<div id="treeview">
-			</div><!--tree-->
-		</div><!--treeContainer-->
+  <body>
+  <div id="main">
+    <div id="treeContainer">
+      <div id="treeview">
+      </div><!--tree-->
+    </div><!--treeContainer-->
 
 
-		<div id="graphContainer">
-			<div id="graph"></div> <!--graph-->
-	
-		</div> <!--graphContainer-->
-	</div> <!--main-->
+    <div id="graphContainer">
+      <div id="graph"></div> <!--graph-->
+  
+    </div> <!--graphContainer-->
+  </div> <!--main-->
 
-			<script>
+      <script>
 d3.jsonp('http://chartercomplex-server.herokuapp.com/nodes.json?callback={callback}', function(got_some_nodes) {
   d3.jsonp('http://chartercomplex-server.herokuapp.com/edges.json?callback={callback}', function(got_some_edges) {
     window.data = {
@@ -72,14 +72,11 @@ d3.jsonp('http://chartercomplex-server.herokuapp.com/nodes.json?callback={callba
       links: got_some_edges.edges
     };
 
-    var nodeIds=_.pluck(data.nodes,'id');
+    var nodeIds = _.pluck(data.nodes,'id');
     data.links.forEach(function(l){
-
-     l.source=nodeIds.indexOf(l.source);
-
-     l.target=nodeIds.indexOf(l.target);
-
-    })
+      l.source = nodeIds.indexOf(l.source);
+      l.target = nodeIds.indexOf(l.target);
+    });
     tree(data);
     doEverything(data);
   });
@@ -131,54 +128,45 @@ function tree(data) {
     });
   });
 
-  data.nodes=addNeighborsToNodes(data.nodes,data.links,1);
-   function addNeighborsToNodes(nodes, edges, degree)
-  {
-    return _.map(nodes,function(node)
-        {
-          node.neighbors=get_neighbors(node.id, degree, edges);
-         return node;
-       }
-     );
+  data.nodes = addNeighborsToNodes(data.nodes, data.links, 1);
+
+  function addNeighborsToNodes(nodes, edges, degree) {
+    return _.map(nodes, function(node) {
+      node.neighbors = get_neighbors(node.id, degree, edges);
+      return node;
+    });
   }
 
-  $('#treeview').jstree({ 'core' : {
+  $('#treeview').jstree({
+    'core': {
       'data' : categories
-  } });
+    }
+  });
 
   $('#treeview').on('select_node.jstree', function (e, jstree_node) {
-      d3.selectAll(".node").style("fill", function (d) {
-         var colorStr;
-          if(d.name==jstree_node.node.text)
-         {
-            colorStr= '#FFCC33';
-          }
-          else
-          { 
-              if(d.t=="Organization")
-              {
-                colorStr='#FF0000';
-              }
-              else if(d.t=="Foundation")
-              {
-                colorStr= '#00FF00';
-              }
-              else if(d.t=="Person")
-              {
-                colorStr= '#0000FF';
-              }
-              
-          }
+    d3.selectAll(".node").style("fill", function (d) {
+      var colorStr;
+      if (d.name==jstree_node.node.text) {
+        colorStr= '#FFCC33';
+      }
+      else {
+        if (d.t=="Organization") {
+          colorStr='#FF0000';
+        }
+        else if(d.t=="Foundation") {
+          colorStr= '#00FF00';
+        }
+        else if(d.t=="Person") {
+          colorStr= '#0000FF';
+        }
+      }
+      return colorStr;
+    });
+  });
 
-          return colorStr;
-
-      })
-   
-    })
-
-      // $('#jstree_demo_div').on("changed.jstree", function (e, data) {
-    //    console.log(data.selected);
-      // });
+  // $('#jstree_demo_div').on("changed.jstree", function (e, data) {
+  //    console.log(data.selected);
+  // });
 
 }
 
@@ -202,63 +190,64 @@ function doEverything(data) {
 
   var link = svg.selectAll(".link")
       .data(force.links())
-    .enter().append("line")
+      .enter().append("line")
       .attr("class", "link");
 
   var labels = svg.selectAll('text')
       .data(data.links)
-    .enter().append('text')
-      .attr("x", function(d) { return (d.source.y + d.target.y) / 2; }) 
-      .attr("y", function(d) { return (d.source.x + d.target.x) / 2; }) 
-      .attr("text-anchor", "middle") 
+      .enter().append('text')
+      .attr("x", function(d) { return (d.source.y + d.target.y) / 2; })
+      .attr("y", function(d) { return (d.source.x + d.target.x) / 2; })
+      .attr("text-anchor", "middle")
       .text(function(d) {return d.label;});
 
   var node = svg.selectAll(".node")
       .append('g').data(force.nodes());
-  
+
   node.enter().append("g")
-    .append("path")
+      .append("path")
       .attr("class", "node")
       .attr("d",  d3.svg.symbol().type(function(d)
-      	{
-      		var typeStr;
-      		if(d.t=="Organization")
-  	    	{
-  	    		typeStr="triangle-up";
-  	    	}
-  	    	else if(d.t=="Foundation")
-  	    	{
-  	    		typeStr= "circle";
-  	    	}
-  	    	else if(d.t=="Person")
-  	    	{
-  	    		typeStr= "square";
-  	    	}
-  	    	return typeStr;
-      	})
+        {
+          var typeStr;
+          if(d.t=="Organization")
+          {
+            typeStr="triangle-up";
+          }
+          else if(d.t=="Foundation")
+          {
+            typeStr= "circle";
+          }
+          else if(d.t=="Person")
+          {
+            typeStr= "square";
+          }
+          return typeStr;
+        })
       )
-      .style("fill", function (d) { 
-      	var colorStr;
-    		if(d.t=="Organization")
-	    	{
-	    		colorStr='FF0000';
-	    	}
-	    	else if(d.t=="Foundation")
-	    	{
-	    		colorStr= '#00FF00';
-	    	}
-	    	else if(d.t=="Person")
-	    	{
-	    		colorStr= '#0000FF';
-	    	}
-	    	return colorStr;
-  		  })   	
-    .on("mouseover", mouseover)
-    .on("mouseout", mouseout)
-    .call(force.drag);
+      .style("fill", function (d) {
+        var colorStr;
+        if(d.t=="Organization")
+        {
+          colorStr='FF0000';
+        }
+        else if(d.t=="Foundation")
+        {
+          colorStr= '#00FF00';
+        }
+        else if(d.t=="Person")
+        {
+          colorStr= '#0000FF';
+        }
+        return colorStr;
+        })
+      .on("mouseover", mouseover)
+      .on("mouseout", mouseout)
+      .on("click", click)
+      .call(force.drag);
 
    node.append("text")
-   	  .style("fill", "black")
+      .style("fill", "black")
       .attr("x", 12)
       .attr("dy", ".35em")
       .text(function(d) { return d.name; });
@@ -274,23 +263,9 @@ function doEverything(data) {
         .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 
     labels
-        .attr("x", function(d) { return (d.source.x + d.target.x) / 2; }) 
-        .attr("y", function(d) { return (d.source.y + d.target.y) / 2; }) 
+        .attr("x", function(d) { return (d.source.x + d.target.x) / 2; })
+        .attr("y", function(d) { return (d.source.y + d.target.y) / 2; });
   }
-
- 
-
-  // var cat_names = _.uniq(_.map(_.pluck(data.nodes, 't'), function(name) {
-  //   return normalize_cat_name(name);
-  // }));
-    
-
-
-  
-
-
-
-  
 
   function mouseover() {
     d3.select(this).select("circle").transition()
@@ -304,10 +279,9 @@ function doEverything(data) {
         .attr("r", 8);
   }
 
-	// 
 }
 
-			</script>
-	</body>
+      </script>
+  </body>
 </html>
 
