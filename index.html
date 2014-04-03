@@ -77,8 +77,12 @@ d3.jsonp('http://chartercomplex-server.herokuapp.com/nodes.json?callback={callba
       l.source = nodeIds.indexOf(l.source);
       l.target = nodeIds.indexOf(l.target);
     });
+
+    window.data.nodes = addNeighborsToNodes(data.nodes, data.links, 1);
+
     tree(data);
     doEverything(data);
+
   });
 });
 
@@ -94,15 +98,27 @@ function normalize_cat_name(name) {
 function get_neighbors(id, degree, edges) {
   return _.uniq(
     _.reduce(edges, function(memo, edge) {
-      if (edge.source.id == id) {
-        memo.push(edge.target.id);
+      var source;
+      var target;
+      source = (edge.source.id) ? edge.source.id : edge.source;
+      target = (edge.target.id) ? edge.target.id : edge.target;
+      if (source == id) {
+        memo.push(target);
       }
-      if (edge.target.id == id) {
-        memo.push(edge.source.id);
+      if (target == id) {
+        memo.push(source);
       }
       return memo;
     }, [])
   );
+}
+
+function addNeighborsToNodes(nodes, edges, degree) {
+  newnodes = _.map(nodes, function(node) {
+    node.neighbors = get_neighbors(node.id, degree, edges);
+    return node;
+  });
+  return newnodes;
 }
 
 function tree(data) {
@@ -127,15 +143,6 @@ function tree(data) {
       'text': node.name
     });
   });
-
-  data.nodes = addNeighborsToNodes(data.nodes, data.links, 1);
-
-  function addNeighborsToNodes(nodes, edges, degree) {
-    return _.map(nodes, function(node) {
-      node.neighbors = get_neighbors(node.id, degree, edges);
-      return node;
-    });
-  }
 
   $('#treeview').jstree({
     'core': {
@@ -268,15 +275,19 @@ function doEverything(data) {
   }
 
   function mouseover() {
-    d3.select(this).select("circle").transition()
+    d3.select(this).transition()
         .duration(750)
-        .attr("r", 16);
+        .attr('transform', 'scale(2)');
   }
 
   function mouseout() {
-    d3.select(this).select("circle").transition()
+    d3.select(this).transition()
         .duration(750)
-        .attr("r", 8);
+        .attr('transform', 'scale(1)');
+  }
+
+  function click(d) {
+    debugger;
   }
 
 }
