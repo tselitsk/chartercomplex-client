@@ -287,9 +287,9 @@ function doEverything(data) {
   }
 
   function click(d) {
-    debugger;
+    d3.select(this)
+        .style("fill", '#FFFF00');
   }
-
 }
 
       </script>
