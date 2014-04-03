@@ -131,6 +131,17 @@ function tree(data) {
     });
   });
 
+  data.nodes=addNeighborsToNodes(data.nodes,data.links,1);
+   function addNeighborsToNodes(nodes, edges, degree)
+  {
+    _.map(nodes,function(node)
+        {
+          node.neighbors=get_neighbors(node.id, degree, edges);
+         return node;
+       }
+     );
+  }
+
   $('#treeview').jstree({ 'core' : {
       'data' : categories
   } });
@@ -266,6 +277,20 @@ function doEverything(data) {
         .attr("x", function(d) { return (d.source.x + d.target.x) / 2; }) 
         .attr("y", function(d) { return (d.source.y + d.target.y) / 2; }) 
   }
+
+ 
+
+  // var cat_names = _.uniq(_.map(_.pluck(data.nodes, 't'), function(name) {
+  //   return normalize_cat_name(name);
+  // }));
+    
+
+
+  
+
+
+
+  
 
   function mouseover() {
     d3.select(this).select("circle").transition()
