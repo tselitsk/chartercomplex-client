@@ -236,7 +236,7 @@ function doEverything(data) {
         var colorStr;
         if(d.t=="Organization")
         {
-          colorStr='FF0000';
+          colorStr='#FF0000';
         }
         else if(d.t=="Foundation")
         {
@@ -250,7 +250,8 @@ function doEverything(data) {
         })
       .on("mouseover", mouseover)
       .on("mouseout", mouseout)
-      .on("click", click)
+      .on("click", function(){var toggleColor = this.style.fill == "red" ? "yellow" : "red";
+        d3.select(this).style("fill", toggleColor);})
       .call(force.drag);
 
    node.append("text")
@@ -288,7 +289,7 @@ function doEverything(data) {
 
   function click(d) {
     d3.select(this)
-        .style("fill", '#FFFF00');
+        .style("fill", "yellow");
   }
 }
 
