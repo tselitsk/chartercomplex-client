@@ -154,7 +154,6 @@ function tree(data) {
     d3.selectAll(".node").style("fill", function(d) {
       if (d.name==jstree_node.node.text) {
         var context = this;
-        debugger;
         return toggle_node(d, null, context);
       } else {
         return d.fillColor;
