@@ -73,15 +73,14 @@ d3.jsonp('http://chartercomplex-server.herokuapp.com/nodes.json?callback={callba
     };
 
     var nodeIds = _.pluck(data.nodes,'id');
-    data.links.forEach(function(l){
+    window.data.links.forEach(function(l){
       l.source = nodeIds.indexOf(l.source);
       l.target = nodeIds.indexOf(l.target);
     });
 
-    window.data.nodes = addNeighborsToNodes(data.nodes, data.links, 1);
+    tree(window.data);
 
-    tree(data);
-    doEverything(data);
+    doEverything(window.data);
 
   });
 });
@@ -114,7 +113,7 @@ function get_neighbors(id, degree, edges) {
 }
 
 function addNeighborsToNodes(nodes, edges, degree) {
-  newnodes = _.map(nodes, function(node) {
+  var newnodes = _.map(nodes, function(node) {
     node.neighbors = get_neighbors(node.id, degree, edges);
     return node;
   });
@@ -180,6 +179,8 @@ function doEverything(data) {
       .charge(-300)
       .on("tick", tick)
       .start();
+    data.nodes = addNeighborsToNodes(data.nodes, data.links, 1);
+
 
   var svg = d3.select("#graph").append("svg")
       .attr("width", width)
