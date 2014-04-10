@@ -304,8 +304,23 @@ function toggle_node(d, index, context) {
   d.toggled = !d.toggled;
   var toggleColor = (d.toggled ? d.fillColor : "yellow");
   d3.select(thiiiiiis).style("fill", toggleColor);
+
+  highlight_neighbors(d.id, d.neighbors);
+
   return toggleColor;
 }
+
+function highlight_neighbors(center_node_id, neighbors) {
+  d3.selectAll('.node').style('fill', function(d) {
+    if (d.id !== center_node_id && !_.contains(neighbors, d.id)) {
+      d.grayed_out == true;
+      return 'gray';
+    }
+    return d.fillColor;
+  });
+}
+
+
 
       </script>
   </body>
