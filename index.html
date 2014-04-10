@@ -151,23 +151,14 @@ function tree(data) {
   });
 
   $('#treeview').on('select_node.jstree', function (e, jstree_node) {
-    d3.selectAll(".node").style("fill", function (d) {
-      var colorStr;
+    d3.selectAll(".node").style("fill", function(d) {
       if (d.name==jstree_node.node.text) {
-        colorStr= '#FFCC33';
+        var context = this;
+        debugger;
+        return toggle_node(d, null, context);
+      } else {
+        return d.fillColor;
       }
-      else {
-        if (d.t=="Organization") {
-          colorStr='#FF0000';
-        }
-        else if(d.t=="Foundation") {
-          colorStr= '#00FF00';
-        }
-        else if(d.t=="Person") {
-          colorStr= '#0000FF';
-        }
-      }
-      return colorStr;
     });
   });
 
@@ -246,12 +237,13 @@ function doEverything(data) {
         {
           colorStr= '#0000FF';
         }
+        d.fillColor = colorStr;
+        d.toggled = false;
         return colorStr;
         })
       .on("mouseover", mouseover)
       .on("mouseout", mouseout)
-      .on("click", function(){var toggleColor = this.style.fill == "red" ? "yellow" : "red";
-        d3.select(this).style("fill", toggleColor);})
+      .on("click", toggle_node)
       .call(force.drag);
 
    node.append("text")
@@ -287,10 +279,32 @@ function doEverything(data) {
         .attr('transform', 'scale(1)');
   }
 
-  function click(d) {
-    d3.select(this)
-        .style("fill", "yellow");
-  }
+}
+
+/**
+ * Sets a certain node (data node and the corresponding d3 dom element)
+ * as clicked or unclicked.
+ *
+ * Needs context `this` as current DOM element
+ *
+ * @param d
+ *   d3 data object
+ *
+ * @param index
+ *   d3 index, per its API (unused)
+ *
+ * @param context
+ *   if u don't want the function to use `this`
+ *
+ * @return
+ *   new color
+ */
+function toggle_node(d, index, context) {
+  var thiiiiiis = (context ? context : this);
+  d.toggled = !d.toggled;
+  var toggleColor = (d.toggled ? d.fillColor : "yellow");
+  d3.select(thiiiiiis).style("fill", toggleColor);
+  return toggleColor;
 }
 
       </script>
