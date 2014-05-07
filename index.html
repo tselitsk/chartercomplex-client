@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <script src="d3.v3.js"></script>
+<script src="http://marvl.infotech.monash.edu/webcola/cola.v3.min.js"></script>
 <script src="http://bnchdrff.github.io/d3.js/plugins/jsonp.js"></script>
 <script src="dist/libs/jquery.js"></script>
 <script src="dist/jstree.min.js"></script>
@@ -47,7 +48,11 @@ text {
 }
 
 #graph {
-  display: inline;
+  display: block;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background: white;
 }
 </style>
   <body>
@@ -168,15 +173,14 @@ function tree(data) {
 
 function doEverything(data) {
 
-  var width = 600,
-      height = 500;
+  var width = window.innerWidth,
+      height = window.innerHeight;
 
-  var force = d3.layout.force()
+  var force = cola.d3adaptor()
       .nodes(d3.values(data.nodes))
       .links(data.links)
       .size([width, height])
       .linkDistance(100)
-      .charge(-300)
       .on("tick", tick)
       .start();
     data.nodes = addNeighborsToNodes(data.nodes, data.links, 1);
