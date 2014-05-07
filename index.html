@@ -180,9 +180,10 @@ function doEverything(data) {
       .nodes(d3.values(data.nodes))
       .links(data.links)
       .size([width, height])
-      .linkDistance(100)
+      .symmetricDiffLinkLengths(15)
+      //.avoidOverlaps(true)
       .on("tick", tick)
-      .start();
+      .start(10,15,20);
     data.nodes = addNeighborsToNodes(data.nodes, data.links, 1);
 
 
