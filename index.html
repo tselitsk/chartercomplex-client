@@ -314,13 +314,11 @@ function highlight_neighbors(center_node_id, neighbors) {
   d3.selectAll('.node').style('fill', function(d) {
     if (d.id !== center_node_id && !_.contains(neighbors, d.id)) {
       d.grayed_out == true;
-      return 'gray';
+      return '#d3d3d3';
     }
     return d.fillColor;
   });
 }
-
-
 
       </script>
   </body>
