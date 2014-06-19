@@ -375,6 +375,13 @@ function highlight_neighbor_nodes(center_node_id, center_node_label, neighbors) 
     }
     return '#000000';
   });
+  d3.selectAll('.link').style('stroke', function(d) {
+    if (d.source.id == center_node_id || d.target.id == center_node_id) {
+      return '#000';
+    } else {
+      return '#d2d2d2';
+    }
+  });
 }
 /*
 *attempt to also toggle the edges and their labels between neighbor nodes
