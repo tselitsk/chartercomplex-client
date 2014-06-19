@@ -361,12 +361,19 @@ function toggle_node(d, index, context) {
 }
 
 function highlight_neighbor_nodes(center_node_id, center_node_label, neighbors) {
-  d3.selectAll('.node, text').style('fill', function(d) {
+  d3.selectAll('.node').style('fill', function(d) {
     if (d.id !== center_node_id && !_.contains(neighbors, d.id)) {
       d.grayed_out == true;
       return '#d2d2d2';
     }
     return d.fillColor;
+  });
+  d3.selectAll('text').style('fill', function(d) {
+    if (d.id !== center_node_id && !_.contains(neighbors, d.id)) {
+      d.grayed_out == true;
+      return '#d2d2d2';
+    }
+    return '#000000';
   });
 }
 /*
