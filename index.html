@@ -10,8 +10,8 @@
 <style>
 
 .link {
-  fill:#666;
-  stroke: #666;
+  fill:#808080;
+  stroke: #808080;
   stroke-width: 1.5px;
 }
 
@@ -21,7 +21,7 @@
 }
 
 text {
-  font: 10px sans-serif;
+  font: 9px sans-serif;
   pointer-events: none;
 }
 
@@ -180,10 +180,10 @@ function doEverything(data) {
       .nodes(d3.values(data.nodes))
       .links(data.links)
       .size([width, height])
-      .symmetricDiffLinkLengths(15)
-      //.avoidOverlaps(true)
+      .symmetricDiffLinkLengths(17)
+      .avoidOverlaps(true)
       .on("tick", tick)
-      .start(10,15,20);
+      .start(12,17,22);
     data.nodes = addNeighborsToNodes(data.nodes, data.links, 1);
 
 
@@ -228,8 +228,11 @@ function doEverything(data) {
           else if(d.t=="Person") {
             typeStr= "circle";
           }
+          else if(d.t=="Board") {
+            typeStr="circle";
+          }
           else if(d.t=="District") {
-            typeStr="triangle-up";
+            typeStr="triangle-down";
           }
           else if(d.t=="School") {
             typeStr="triangle-up";
@@ -238,12 +241,9 @@ function doEverything(data) {
             typeStr="triangle-up";
           }
           else if(d.t=="University") {
-            typeStr="triangle-down";
-          }
-          else if(d.t=="EMO") {
             typeStr="diamond";
           }
-          else if(d.t=="Board") {
+          else if(d.t=="EMO") {
             typeStr="diamond";
           }
           return typeStr;
@@ -252,7 +252,7 @@ function doEverything(data) {
       .style("fill", function (d) {
         var colorStr;
           if(d.t=="Organization") {
-            colorStr='blue';
+            colorStr='#006699';
           }
           else if(d.t=="Company") {
             colorStr='red';
@@ -265,6 +265,9 @@ function doEverything(data) {
           }
           else if(d.t=="Person") {
             colorStr='brown';
+          }
+          else if(d.t=="Board") {
+            colorStr='green';
           }
           else if(d.t=="District") {
             colorStr='orange';
@@ -280,9 +283,6 @@ function doEverything(data) {
           }
           else if(d.t=="EMO") {
             colorStr='red';
-          }
-          else if(d.t=="Board") {
-            colorStr='green';
           }
         d.fillColor = colorStr;
         d.toggled = false;
@@ -364,38 +364,33 @@ function highlight_neighbor_nodes(center_node_id, center_node_label, neighbors) 
   d3.selectAll('.node').style('fill', function(d) {
     if (d.id !== center_node_id && !_.contains(neighbors, d.id)) {
       d.grayed_out == true;
-      return '#d2d2d2';
+      return '#f5f5f5';
     }
     return d.fillColor;
   });
   d3.selectAll('text').style('fill', function(d) {
     if (d.id !== center_node_id && !_.contains(neighbors, d.id)) {
       d.grayed_out == true;
-      return '#d2d2d2';
+      return '#f5f5f5';
     }
     return '#000000';
   });
   d3.selectAll('.link').style('stroke', function(d) {
     if (d.source.id == center_node_id || d.target.id == center_node_id) {
+      return '#808080';
+    } else {
+      return '#f5f5f5';
+    }
+  });
+  d3.selectAll('text').style('fill', function(d) {
+    if (d.source.id == center_node_id || d.target.id == center_node_id) {
       return '#000';
     } else {
-      return '#d2d2d2';
+      return '#f5f5f5';
     }
   });
 }
-/*
-*attempt to also toggle the edges and their labels between neighbor nodes
 
-function highlight_neighbor_edges(source_node_id, edge_label, neighbors) {
-  d3.selectAll('.link, text').style('fill', function(d) {
-    if (d.source.neighbors !== source_node_id && !_.contains(neighbors, d.source)) {
-      d.grayed_out == true;
-      return '#d2d2d2';
-    }
-    return d.fillColor;
-  });
-}
-*/
       </script>
   </body>
 </html>
