@@ -6,6 +6,7 @@
 <script src="dist/libs/jquery.js"></script>
 <script src="dist/jstree.min.js"></script>
 <script src="dist/tooltip.js"></script>
+<script src="dist/d3.legend.js"></script>
 <script src="https://rawgithub.com/lodash/lodash/2.4.1/dist/lodash.min.js"></script>
 <link rel="stylesheet" href="dist/themes/default/style.min.css" />
 <style>
@@ -25,6 +26,11 @@ text {
   font: 9px sans-serif;
   pointer-events: none;
 }
+
+.legend rect {
+  fill:white;
+  stroke:black;
+  opacity:0.8;}
 
 #main
 {
@@ -181,7 +187,7 @@ function doEverything(data) {
       .links(data.links)
       .size([width, height])
       .symmetricDiffLinkLengths(17)
-      .avoidOverlaps(true)
+      //.avoidOverlaps(true)
       .on("tick", tick)
       .start(12,17,22);
     data.nodes = addNeighborsToNodes(data.nodes, data.links, 1);
@@ -194,7 +200,7 @@ function doEverything(data) {
       .data(force.links())
       .enter().append("line")
       .attr("class", "link")
-      
+
       .call(d3.helper.tooltip()
         .attr({class: function(d, i) {
           return d + ' ' +  i + ' A';}})
@@ -264,7 +270,7 @@ function doEverything(data) {
       .style("fill", function (d) {
         var colorStr;
           if(d.t=="Organization") {
-            colorStr='#006699';
+            colorStr='blue';
           }
           else if(d.t=="Company") {
             colorStr='red';
@@ -300,6 +306,7 @@ function doEverything(data) {
         d.toggled = false;
         return colorStr;
         })
+      .attr("data-legend",function(d) { return d.t})
       .on("mouseover", mouseover)
       .on("mouseout", mouseout)
       .on("click", toggle_node)
@@ -337,6 +344,13 @@ function doEverything(data) {
         .duration(750)
         .attr('transform', 'scale(1)');
   }
+
+legend = svg.append("g")
+  .attr("class","legend")
+  .attr("transform","translate(50,30)")
+  .style("font-size","9px")
+  .call(d3.legend)
+
 }
 
 /**
