@@ -5,6 +5,7 @@
 <script src="http://bnchdrff.github.io/d3.js/plugins/jsonp.js"></script>
 <script src="dist/libs/jquery.js"></script>
 <script src="dist/jstree.min.js"></script>
+<script src="dist/tooltip.js"></script>
 <script src="https://rawgithub.com/lodash/lodash/2.4.1/dist/lodash.min.js"></script>
 <link rel="stylesheet" href="dist/themes/default/style.min.css" />
 <style>
@@ -57,16 +58,17 @@ text {
 </style>
   <body>
   <div id="main">
+    
     <div id="treeContainer">
       <div id="treeview">
       </div><!--tree-->
     </div><!--treeContainer-->
 
-
     <div id="graphContainer">
-      <div id="graph"></div> <!--graph-->
-  
+      <div id="graph">
+      </div> <!--graph-->
     </div> <!--graphContainer-->
+
   </div> <!--main-->
 
       <script>
@@ -126,7 +128,6 @@ function addNeighborsToNodes(nodes, edges, degree) {
 }
 
 function tree(data) {
-
   // build jstree data:
   var cat_names = _.uniq(_.map(_.pluck(data.nodes, 't'), function(name) {
     return normalize_cat_name(name);
@@ -168,7 +169,6 @@ function tree(data) {
   // $('#jstree_demo_div').on("changed.jstree", function (e, data) {
   //    console.log(data.selected);
   // });
-
 }
 
 function doEverything(data) {
@@ -186,7 +186,6 @@ function doEverything(data) {
       .start(12,17,22);
     data.nodes = addNeighborsToNodes(data.nodes, data.links, 1);
 
-
   var svg = d3.select("#graph").append("svg")
       .attr("width", width)
       .attr("height", height);
@@ -194,7 +193,16 @@ function doEverything(data) {
   var link = svg.selectAll(".link")
       .data(force.links())
       .enter().append("line")
-      .attr("class", "link");
+      .attr("class", "link")
+      
+      .call(d3.helper.tooltip()
+        .attr({class: function(d, i) {
+          return d + ' ' +  i + ' A';}})
+        .style({color: 'black'})
+        .text(function(d,i){return 'citation: '+ d.citation;})
+        )
+        .on('mouseover', function(d, i){ d3.select(this).style({fill: 'red'}); })
+        .on('mouseout', function(d, i){ d3.select(this).style({fill: 'blue'}); });
 
   var labels = svg.selectAll('text')
       .data(data.links)
@@ -206,6 +214,10 @@ function doEverything(data) {
 
   var node = svg.selectAll(".node")
       .append('g').data(force.nodes());
+
+  var sampleSVG = d3.select('.viz')
+      .append('svg')
+      .attr({width: 600, height: 100});
 
   node.enter().append("g")
       .append("path")
@@ -325,7 +337,6 @@ function doEverything(data) {
         .duration(750)
         .attr('transform', 'scale(1)');
   }
-
 }
 
 /**
@@ -368,6 +379,7 @@ function highlight_neighbor_nodes(center_node_id, center_node_label, neighbors) 
     }
     return d.fillColor;
   });
+
   d3.selectAll('text').style('fill', function(d) {
     if (d.id !== center_node_id && !_.contains(neighbors, d.id)) {
       d.grayed_out == true;
@@ -375,6 +387,7 @@ function highlight_neighbor_nodes(center_node_id, center_node_label, neighbors) 
     }
     return '#000000';
   });
+
   d3.selectAll('.link').style('stroke', function(d) {
     if (d.source.id == center_node_id || d.target.id == center_node_id) {
       return '#808080';
@@ -382,6 +395,7 @@ function highlight_neighbor_nodes(center_node_id, center_node_label, neighbors) 
       return '#f5f5f5';
     }
   });
+
   d3.selectAll('text').style('fill', function(d) {
     if (d.source.id == center_node_id || d.target.id == center_node_id) {
       return '#000';
@@ -390,8 +404,6 @@ function highlight_neighbor_nodes(center_node_id, center_node_label, neighbors) 
     }
   });
 }
-
       </script>
   </body>
 </html>
-
