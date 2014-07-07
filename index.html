@@ -403,18 +403,22 @@ function highlight_neighbor_nodes(center_node_id, center_node_label, neighbors) 
   });
 
   d3.selectAll('.link').style('stroke', function(d) {
-    if (d.source.id == center_node_id || d.target.id == center_node_id) {
-      return '#808080';
-    } else {
-      return '#f5f5f5';
+    if (d.hasOwnProperty('source') || d.hasOwnProperty('target')) {
+      if (d.source.id == center_node_id || d.target.id == center_node_id) {
+        return '#808080';
+      } else {
+        return '#f5f5f5';
+      }
     }
   });
 
   d3.selectAll('text').style('fill', function(d) {
-    if (d.source.id == center_node_id || d.target.id == center_node_id) {
-      return '#000';
-    } else {
-      return '#f5f5f5';
+    if (d.hasOwnProperty('source') || d.hasOwnProperty('target')) {
+      if (d.source.id == center_node_id || d.target.id == center_node_id) {
+        return '#000';
+      } else {
+        return '#f5f5f5';
+      }
     }
   });
 }
