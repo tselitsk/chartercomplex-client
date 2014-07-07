@@ -426,24 +426,22 @@ function highlight_neighbor_nodes(center_node_id, center_node_label, neighbors) 
   });
 
   d3.selectAll('text').classed('active', function(d) {
-    if (d.id !== center_node_id && !_.contains(neighbors, d.id)) {
-      d.grayed_out == true;
-      return false;
-    }
-    return true;
-  });
-
-  d3.selectAll('.link').classed('active', function(d) {
     if (d.hasOwnProperty('source') || d.hasOwnProperty('target')) {
       if (d.source.id == center_node_id || d.target.id == center_node_id) {
         return true;
       } else {
         return false;
       }
+    } else {
+    if (d.id !== center_node_id && !_.contains(neighbors, d.id)) {
+      d.grayed_out == true;
+      return false;
+    }
+    return true;
     }
   });
 
-  d3.selectAll('text').classed('active', function(d) {
+  d3.selectAll('.link').classed('active', function(d) {
     if (d.hasOwnProperty('source') || d.hasOwnProperty('target')) {
       if (d.source.id == center_node_id || d.target.id == center_node_id) {
         return true;
