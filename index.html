@@ -1,28 +1,36 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <script src="d3.v3.js"></script>
+<script src="http://marvl.infotech.monash.edu/webcola/cola.v3.min.js"></script>
 <script src="http://bnchdrff.github.io/d3.js/plugins/jsonp.js"></script>
 <script src="dist/libs/jquery.js"></script>
 <script src="dist/jstree.min.js"></script>
+<script src="dist/tooltip.js"></script>
+<script src="dist/d3.legend.js"></script>
 <script src="https://rawgithub.com/lodash/lodash/2.4.1/dist/lodash.min.js"></script>
 <link rel="stylesheet" href="dist/themes/default/style.min.css" />
 <style>
 
 .link {
-  fill:#666;
-  stroke: #666;
+  fill:#808080;
+  stroke: #808080;
   stroke-width: 1.5px;
 }
 
-.node circle {
-  stroke: #fff;
-  stroke-width: 1.5px;
+.node {
+  /*fill:#000000;*/
+  stroke-width: 3px;
 }
 
 text {
-  font: 10px sans-serif;
+  font: 9px sans-serif;
   pointer-events: none;
 }
+
+.legend rect {
+  fill:white;
+  stroke:black;
+  opacity:0.8;}
 
 #main
 {
@@ -47,21 +55,26 @@ text {
 }
 
 #graph {
-  display: inline;
+  display: block;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background: white;
 }
 </style>
   <body>
   <div id="main">
+    
     <div id="treeContainer">
       <div id="treeview">
       </div><!--tree-->
     </div><!--treeContainer-->
 
-
     <div id="graphContainer">
-      <div id="graph"></div> <!--graph-->
-  
+      <div id="graph">
+      </div> <!--graph-->
     </div> <!--graphContainer-->
+
   </div> <!--main-->
 
       <script>
@@ -121,7 +134,6 @@ function addNeighborsToNodes(nodes, edges, degree) {
 }
 
 function tree(data) {
-
   // build jstree data:
   var cat_names = _.uniq(_.map(_.pluck(data.nodes, 't'), function(name) {
     return normalize_cat_name(name);
@@ -163,24 +175,22 @@ function tree(data) {
   // $('#jstree_demo_div').on("changed.jstree", function (e, data) {
   //    console.log(data.selected);
   // });
-
 }
 
 function doEverything(data) {
 
-  var width = 600,
-      height = 500;
+  var width = window.innerWidth,
+      height = window.innerHeight;
 
-  var force = d3.layout.force()
+  var force = cola.d3adaptor()
       .nodes(d3.values(data.nodes))
       .links(data.links)
       .size([width, height])
-      .linkDistance(100)
-      .charge(-300)
+      .symmetricDiffLinkLengths(17)
+      //.avoidOverlaps(true)
       .on("tick", tick)
-      .start();
+      .start(12,17,22);
     data.nodes = addNeighborsToNodes(data.nodes, data.links, 1);
-
 
   var svg = d3.select("#graph").append("svg")
       .attr("width", width)
@@ -189,7 +199,16 @@ function doEverything(data) {
   var link = svg.selectAll(".link")
       .data(force.links())
       .enter().append("line")
-      .attr("class", "link");
+      .attr("class", "link")
+
+      .call(d3.helper.tooltip()
+        .attr({class: function(d, i) {
+          return d + ' ' +  i + ' A';}})
+        .style({color: 'black'})
+        .text(function(d,i){return 'citation: '+ d.citation;})
+        )
+        .on('mouseover', function(d, i){ d3.select(this).style({fill: 'red'}); })
+        .on('mouseout', function(d, i){ d3.select(this).style({fill: 'blue'}); });
 
   var labels = svg.selectAll('text')
       .data(data.links)
@@ -202,45 +221,92 @@ function doEverything(data) {
   var node = svg.selectAll(".node")
       .append('g').data(force.nodes());
 
+  var sampleSVG = d3.select('.viz')
+      .append('svg')
+      .attr({width: 600, height: 100});
+
   node.enter().append("g")
       .append("path")
       .attr("class", "node")
-      .attr("d",  d3.svg.symbol().type(function(d)
-        {
+      .attr("d",  d3.svg.symbol().size(120)
+        .type(function(d) {
           var typeStr;
-          if(d.t=="Organization")
-          {
-            typeStr="triangle-up";
+          if(d.t=="Organization") {
+            typeStr="square";
           }
-          else if(d.t=="Foundation")
-          {
+          else if(d.t=="Company") {
+            typeStr="square";
+          }
+          else if(d.t=="Foundation") {
+            typeStr= "cross";
+          }
+          else if(d.t=="Municipality") {
+            typeStr= "cross";
+          }
+          else if(d.t=="Person") {
             typeStr= "circle";
           }
-          else if(d.t=="Person")
-          {
-            typeStr= "square";
+          else if(d.t=="Board") {
+            typeStr="circle";
+          }
+          else if(d.t=="District") {
+            typeStr="triangle-down";
+          }
+          else if(d.t=="School") {
+            typeStr="triangle-up";
+          }
+          else if(d.t=="Building") {
+            typeStr="triangle-up";
+          }
+          else if(d.t=="University") {
+            typeStr="diamond";
+          }
+          else if(d.t=="EMO") {
+            typeStr="diamond";
           }
           return typeStr;
         })
       )
       .style("fill", function (d) {
         var colorStr;
-        if(d.t=="Organization")
-        {
-          colorStr='#FF0000';
-        }
-        else if(d.t=="Foundation")
-        {
-          colorStr= '#00FF00';
-        }
-        else if(d.t=="Person")
-        {
-          colorStr= '#0000FF';
-        }
+          if(d.t=="Organization") {
+            colorStr='blue';
+          }
+          else if(d.t=="Company") {
+            colorStr='red';
+          }
+          else if(d.t=="Foundation") {
+            colorStr='purple';
+          }
+          else if(d.t=="Municipality") {
+            colorStr='pink';
+          }
+          else if(d.t=="Person") {
+            colorStr='brown';
+          }
+          else if(d.t=="Board") {
+            colorStr='green';
+          }
+          else if(d.t=="District") {
+            colorStr='orange';
+          }
+          else if(d.t=="School") {
+            colorStr='orange';
+          }
+          else if(d.t=="Building") {
+            colorStr='green';
+          }
+          else if(d.t=="University") {
+            colorStr='yellow';
+          }
+          else if(d.t=="EMO") {
+            colorStr='red';
+          }
         d.fillColor = colorStr;
         d.toggled = false;
         return colorStr;
         })
+      .attr("data-legend",function(d) { return d.t})
       .on("mouseover", mouseover)
       .on("mouseout", mouseout)
       .on("click", toggle_node)
@@ -279,6 +345,12 @@ function doEverything(data) {
         .attr('transform', 'scale(1)');
   }
 
+legend = svg.append("g")
+  .attr("class","legend")
+  .attr("transform","translate(50,30)")
+  .style("font-size","9px")
+  .call(d3.legend)
+
 }
 
 /**
@@ -298,31 +370,54 @@ function doEverything(data) {
  *
  * @return
  *   new color
- */
+ **/
 function toggle_node(d, index, context) {
   var thiiiiiis = (context ? context : this);
   d.toggled = !d.toggled;
   var toggleColor = (d.toggled ? d.fillColor : "yellow");
   d3.select(thiiiiiis).style("fill", toggleColor);
 
-  highlight_neighbors(d.id, d.neighbors);
+  highlight_neighbor_nodes(d.id, d.name, d.neighbors);
+  /*
+  highlight_neighbor_edges(d.source.id, d.label, d.source.neighbors);
+  */
 
   return toggleColor;
 }
 
-function highlight_neighbors(center_node_id, neighbors) {
+function highlight_neighbor_nodes(center_node_id, center_node_label, neighbors) {
   d3.selectAll('.node').style('fill', function(d) {
     if (d.id !== center_node_id && !_.contains(neighbors, d.id)) {
       d.grayed_out == true;
-      return 'gray';
+      return '#f5f5f5';
     }
     return d.fillColor;
   });
+
+  d3.selectAll('text').style('fill', function(d) {
+    if (d.id !== center_node_id && !_.contains(neighbors, d.id)) {
+      d.grayed_out == true;
+      return '#f5f5f5';
+    }
+    return '#000000';
+  });
+
+  d3.selectAll('.link').style('stroke', function(d) {
+    if (d.source.id == center_node_id || d.target.id == center_node_id) {
+      return '#808080';
+    } else {
+      return '#f5f5f5';
+    }
+  });
+
+  d3.selectAll('text').style('fill', function(d) {
+    if (d.source.id == center_node_id || d.target.id == center_node_id) {
+      return '#000';
+    } else {
+      return '#f5f5f5';
+    }
+  });
 }
-
-
-
       </script>
   </body>
 </html>
-
