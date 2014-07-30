@@ -2,7 +2,7 @@
 <meta charset="utf-8">
 <script src="d3.v3.js"></script>
 <script src="http://marvl.infotech.monash.edu/webcola/cola.v3.min.js"></script>
-<script src="http://bnchdrff.github.io/d3.js/plugins/jsonp.js"></script>
+<script src="https://bnchdrff.github.io/d3.js/plugins/jsonp.js"></script>
 <script src="dist/libs/jquery.js"></script>
 <script src="dist/jstree.min.js"></script>
 <script src="dist/tooltip.js"></script>
@@ -109,8 +109,13 @@ g.legend text {
   </div> <!--main-->
 
       <script>
-d3.jsonp('http://chartercomplex-server.herokuapp.com/nodes.json?callback={callback}', function(got_some_nodes) {
-  d3.jsonp('http://chartercomplex-server.herokuapp.com/edges.json?callback={callback}', function(got_some_edges) {
+var protocol = (
+  ("https:" == document.location.protocol)
+  ? "https"
+  : "http"
+);
+d3.jsonp(protocol + '://chartercomplex-server.herokuapp.com/nodes.json?callback={callback}', function(got_some_nodes) {
+  d3.jsonp(protocol + ://chartercomplex-server.herokuapp.com/edges.json?callback={callback}', function(got_some_edges) {
     window.data = {
       nodes: got_some_nodes.nodes,
       links: got_some_edges.edges
