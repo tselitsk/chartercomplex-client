@@ -115,7 +115,7 @@ var protocol = (
   : "http"
 );
 d3.jsonp(protocol + '://chartercomplex-server.herokuapp.com/nodes.json?callback={callback}', function(got_some_nodes) {
-  d3.jsonp(protocol + ://chartercomplex-server.herokuapp.com/edges.json?callback={callback}', function(got_some_edges) {
+  d3.jsonp(protocol + '://chartercomplex-server.herokuapp.com/edges.json?callback={callback}', function(got_some_edges) {
     window.data = {
       nodes: got_some_nodes.nodes,
       links: got_some_edges.edges
