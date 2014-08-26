@@ -12,7 +12,7 @@
 <style>
 
 .link {
-  fill:#808080;
+  fill: #808080;
   stroke: #808080;
   stroke-width: 1.5px;
 }
@@ -240,6 +240,17 @@ function doEverything(data) {
       .data(force.links())
       .enter().append("svg:path")
       .attr("class", "link")
+      .style("stroke", function (d) {
+        var colorLink;
+          if (d.tags=="Grant") {
+            colorLink="green";
+          }
+          else {
+            colorLink="black";
+          }
+          d.stroke = colorLink;
+          return colorLink;
+      })
 
       .call(d3.helper.tooltip()
         .attr({class: function(d, i) {
