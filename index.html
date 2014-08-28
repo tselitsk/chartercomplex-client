@@ -194,15 +194,15 @@ function tree(data) {
     });
   });
 
-  var selectNode(id)
+var selectNode(id)
   {
-    var selectedNode= _.find(data.nodes, function(node) {
-      return node.id ==id;
-    });
+    d3.selectAll('.node')
+      .filter(function(d,i){
+        return d.id==id}
+      })
+      .each(toggle_node)
 
-    toggle_node(selectedNode);
   }
-
 //   function toggle_node(d, index, context) {
 //   var thiiiiiis = (context ? context : this);
 //   d.toggled = !d.toggled;
