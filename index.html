@@ -194,28 +194,19 @@ function tree(data) {
     });
   });
 
-var selectNode(id)
-  {
-    d3.selectAll('.node')
-      .filter(function(d,i){
-        return d.id==id}
-      })
-      .each(toggle_node)
-
-  }
-//   function toggle_node(d, index, context) {
-//   var thiiiiiis = (context ? context : this);
-//   d.toggled = !d.toggled;
-//   var toggleColor = (d.toggled ? d.fillColor : "yellow");
-//   d3.select(thiiiiiis).style("fill", toggleColor);
-
-//   highlight_neighbor_nodes(d.id, d.name, d.neighbors);
-//   /*
-//   highlight_neighbor_edges(d.source.id, d.label, d.source.neighbors);
-//   */
-
-//   return toggleColor;
-// }
+/**
+ * Toggle a single node by its D3 index.
+ *
+ * @param id
+ *   d3.js id
+ */
+function selectNode(id) {
+  d3.selectAll('.node')
+    .filter(function(d, i) {
+      return d.id==id
+    })
+    .each(toggle_node);
+}
 
   _.each(data.nodes, function(node) {
     categories.push({
