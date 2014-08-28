@@ -194,6 +194,29 @@ function tree(data) {
     });
   });
 
+  var selectNode(id)
+  {
+    var selectedNode= _.find(data.nodes, function(node) {
+      return node.id ==id;
+    });
+
+    toggle_node(selectedNode);
+  }
+
+//   function toggle_node(d, index, context) {
+//   var thiiiiiis = (context ? context : this);
+//   d.toggled = !d.toggled;
+//   var toggleColor = (d.toggled ? d.fillColor : "yellow");
+//   d3.select(thiiiiiis).style("fill", toggleColor);
+
+//   highlight_neighbor_nodes(d.id, d.name, d.neighbors);
+//   /*
+//   highlight_neighbor_edges(d.source.id, d.label, d.source.neighbors);
+//   */
+
+//   return toggleColor;
+// }
+
   _.each(data.nodes, function(node) {
     categories.push({
       'id': node.id,
