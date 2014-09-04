@@ -404,6 +404,38 @@ legend = svg.append("g")
  * @return
  *   new color
  **/
+
+//grey out node function
+//select neighbor nodes
+//highlight node
+
+function greyOutNode(node, on_or_off)
+{
+    if(on_or_off){
+      node.grayed_out=true;
+    }
+    else{
+      node.grayed_out=false;
+    }
+}
+
+function greyOutAll(on_or_off)
+{
+  d3.selectAll('.node').classed('active', function(d){
+    greyOutElement(d,on_or_off);
+    return false;
+  })
+
+   d3.selectAll('text').classed('active', function(d) {
+    return false;
+   })
+
+   d3.selectAll('.link').classed('active', function(d) {
+    return false;
+    })
+}
+
+
 function toggle_node(d, index, context, on_or_off) {
   var thiiiiiis = (context ? context : this);
   d.toggled = !d.toggled;
@@ -417,6 +449,8 @@ function toggle_node(d, index, context, on_or_off) {
 
   return toggleColor;
 }
+
+
 
 function highlight_neighbor_nodes(center_node_id, center_node_label, neighbors) {
   d3.selectAll('.node').classed('active', function(d) {
