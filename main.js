@@ -397,10 +397,14 @@ legend = svg.append("g")
  * @param context
  *   if u don't want the function to use `this`
  *
+ * @param on_or_off
+ *   if provided, set node as not-greyed-out (on) or greyed-out (off)a
+ *   if not provided, function will just toggle the node
+ *
  * @return
  *   new color
  **/
-function toggle_node(d, index, context) {
+function toggle_node(d, index, context, on_or_off) {
   var thiiiiiis = (context ? context : this);
   d.toggled = !d.toggled;
   var toggleColor = (d.toggled ? d.fillColor : "yellow");
