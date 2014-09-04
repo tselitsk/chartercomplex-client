@@ -55,6 +55,17 @@ text {
  margin-left: 0;
 }
 
+#filters {
+  display: block;
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  width: 300px;
+  height: 200px;
+  border: 1px solid green;
+  background: white;
+}
+
 #graph {
   display: block;
   position: absolute;
@@ -109,15 +120,11 @@ g.legend text {
       </div> <!--graph-->
     </div> <!--graphContainer-->
 
-  </div> <!--main-->
-<!--
-  <div id="sidebar" style="display: none;">
-    <div class="item-group">
-        <label class="item-label">Filter</label>  
-        <div id="filterContainer" class="filterContainer checkbox-interaction-group"></div>
+    <div id="filters">
+
     </div>
-  </div>
--->
+
+  </div> <!--main-->
 <script src="main.js"></script>
   </body>
 </html>
