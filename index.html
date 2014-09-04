@@ -308,12 +308,6 @@ function doEverything(data) {
         .on('mouseover', function(d, i){ d3.select(this).style({fill: 'red'}); })
         .on('mouseout', function(d, i){ d3.select(this).style({fill: 'blue'}); });
 
-/*  var path = svg.append("svg:g")
-        .selectAll("path")
-        .data(force.links())
-        .enter().append("svg:path")
-        .attr("class", "link"); */
-
   sortLinks();
   setLinkIndexAndNum();
 
@@ -576,42 +570,6 @@ function highlight_neighbor_nodes(center_node_id, center_node_label, neighbors) 
     }
   });
 }
-/*
-// Method to filter graph
-function filterGraph(aType, aVisibility)
-{   
-    // change the visibility of the connection path
-    link.style("visibility", function(o) {
-        var lOriginalVisibility = $(this).css("visibility");
-        return o.type === aType ? aVisibility : lOriginalVisibility;
-    }); 
-
-    // change the visibility of the node
-    // if all the links with that node are invisibile, the node should also be invisible
-    // otherwise if any link related to that node is visibile, the node should be visible
-    node.style("visibility", function(o, i) { 
-        var lHideNode = true;
-        link.each(function(d, i){
-            if(d.source === o || d.target === o)
-            {
-                if($(this).css("visibility") === "visible")
-                {
-                    lHideNode = false;
-                    // we need show the text for this circle
-                    d3.select(d3.selectAll(".nodeText")[0][i]).style("visibility","visible");
-                    return "visible";
-                }
-            }
-        });
-        if(lHideNode)
-        {
-            // we need hide the text for this circle 
-            d3.select(d3.selectAll(".nodeText")[0][i]).style("visibility","hidden");
-            return "hidden";
-        }
-    });
-}
- */   
     </script>
   </body>
 </html>
