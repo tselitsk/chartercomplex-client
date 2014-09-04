@@ -422,7 +422,7 @@ function greyOutNode(node, on_or_off)
 function greyOutAll(on_or_off)
 {
   d3.selectAll('.node').classed('active', function(d){
-    greyOutElement(d,on_or_off);
+   greyOutNode(d,on_or_off);
     return false;
   })
 
