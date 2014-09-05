@@ -112,38 +112,8 @@ $('#treeview').jstree({
       }
     });
   });
-
-  // $('#jstree_demo_div').on("changed.jstree", function (e, data) {
-  //    console.log(data.selected);
-  // });
-} 
-
-/* // method to create filter
-function createFilter() {
-  d3.select(".filterContainer").selectAll("div")
-    .data(["1992", "1998", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014"])
-    .enter()
-    .append("div")
-        .attr("class", "checkbox-container")
-    .append("label")
-    .each(function(d) {
-// create checkbox for each data
-  d3.select(this).append("input")
-    .attr("type", "checkbox")
-    .attr("id", function(d) {return "chk_" + d;})
-    .attr("checked", true)
-    .on("click", function(d, i) {
-        // register on click event
-        var lVisibility = this.checked? "visible":"hidden";
-          filterGraph(d, lVisibility);
-        })
-    d3.select(this).append("span")
-      .text(function(d){return d;});
-      });
-
-    $("#sidebar").show();  // show sidebar
 }
-*/
+
 function doEverything(data) {
 
   var width = window.innerWidth,
@@ -157,7 +127,8 @@ function doEverything(data) {
       //.avoidOverlaps(true)
       .on("tick", tick)
       .start(12, 17, 22);
-    data.nodes = addNeighborsToNodes(data.nodes, data.links, 1);
+
+  data.nodes = addNeighborsToNodes(data.nodes, data.links, 1);
 
   var svg = d3.select("#graph").append("svg")
       .attr("width", width)
@@ -189,11 +160,11 @@ function doEverything(data) {
         })
       )
 
-        .on('mouseover', function (d, i) { 
-          d3.select(this).style({fill: 'red'}); 
+        .on('mouseover', function (d, i) {
+          d3.select(this).style({fill: 'red'});
         })
-        .on('mouseout', function (d, i) { 
-          d3.select(this).style({fill: 'blue'}); 
+        .on('mouseout', function (d, i) {
+          d3.select(this).style({fill: 'blue'});
         });
 
   sortLinks();
@@ -202,11 +173,11 @@ function doEverything(data) {
   var labels = svg.selectAll('text')
       .data(data.links)
       .enter().append('text')
-      .attr("x", function (d) { 
-        return (d.source.y + d.target.y) / 2; 
+      .attr("x", function (d) {
+        return (d.source.y + d.target.y) / 2;
       })
-      .attr("y", function (d) { 
-        return (d.source.x + d.target.x) / 2; 
+      .attr("y", function (d) {
+        return (d.source.x + d.target.x) / 2;
       })
       .attr("text-anchor", "middle")
       .text(function (d) {
@@ -216,92 +187,78 @@ function doEverything(data) {
   var node = svg.selectAll(".node")
       .append('g').data(force.nodes());
 
-  var sampleSVG = d3.select('.viz')
-      .append('svg')
-      .attr({width: 600, height: 100});
-
   node.enter().append("g")
       .append("path")
       .attr("class", "node")
       .attr("d",  d3.svg.symbol().size(120)
         .type(function (d) {
           var typeStr;
-          if(d.t == "Organization") {
-            typeStr = "square";
-          }
-          else if(d.t == "Company") {
-            typeStr = "square";
-          }
-          else if(d.t == "Foundation") {
-            typeStr = "cross";
-          }
-          else if(d.t == "Municipality") {
-            typeStr = "cross";
-          }
-          else if(d.t == "Person") {
-            typeStr = "circle";
-          }
-          else if(d.t == "Board") {
-            typeStr = "circle";
-          }
-          else if(d.t == "District") {
-            typeStr = "triangle-down";
-          }
-          else if(d.t == "School") {
-            typeStr = "triangle-up";
-          }
-          else if(d.t == "Building") {
-            typeStr = "triangle-up";
-          }
-          else if(d.t == "University") {
-            typeStr = "diamond";
-          }
-          else if(d.t == "EMO") {
-            typeStr = "diamond";
+          switch (d.t) {
+            case "Organization":
+            case "Company":
+            case "Foundation":
+            case "Municipality":
+              typeStr = "square";
+              break;
+            case "Person":
+            case "Board":
+              typeStr = "circle";
+              break;
+            case "District":
+              typeStr = "triangle-down";
+              break;
+            case "School":
+            case "Building":
+              typeStr = "triangle-up";
+              break;
+            case "University":
+            case "EMO":
+            default:
+              typeStr = "diamond";
+              break;
           }
           return typeStr;
         })
       )
       .style("fill", function (d) {
         var colorStr;
-          if(d.t == "Organization") {
+        switch (d.t) {
+          case "Organization":
             colorStr = 'blue';
-          }
-          else if(d.t == "Company") {
+          case "Company":
             colorStr = 'red';
-          }
-          else if(d.t == "Foundation") {
+          case "Foundation":
             colorStr = 'purple';
-          }
-          else if(d.t == "Municipality") {
+            break;
+          case "Municipality":
             colorStr = 'pink';
-          }
-          else if(d.t == "Person") {
+            break;
+          case "Person":
             colorStr = 'brown';
-          }
-          else if(d.t == "Board") {
+            break;
+          case "Board":
             colorStr = 'green';
-          }
-          else if(d.t == "District") {
+            break;
+          case "District":
+          case "School":
             colorStr = 'orange';
-          }
-          else if(d.t == "School") {
-            colorStr = 'orange';
-          }
-          else if(d.t == "Building") {
+            break;
+          case "Building":
             colorStr = 'green';
-          }
-          else if(d.t == "University") {
+            break;
+          case "University":
             colorStr = 'yellow';
-          }
-          else if(d.t == "EMO") {
+            break;
+          case "EMO":
+          default:
             colorStr = 'red';
-          }
+            break;
+        }
         d.fillColor = colorStr;
         d.toggled = false;
         return colorStr;
-        })
-      .attr("data-legend",function (d) { 
+      })
+      .attr("data-legend",function (d) {
         return d.t;
       })
       .on("mouseover", mouseover)
@@ -313,8 +270,8 @@ function doEverything(data) {
       .style("fill", "black")
       .attr("x", 12)
       .attr("dy", ".35em")
-      .text(function (d) { 
-        return d.name; 
+      .text(function (d) {
+        return d.name;
       });
 
   function tick() {
@@ -333,29 +290,31 @@ function doEverything(data) {
       });
 
     node
-        .attr("transform", function (d) { 
-          return "translate(" + d.x + "," + d.y + ")"; 
-        });
+      .attr("transform", function (d) {
+        return "translate(" + d.x + "," + d.y + ")";
+      });
 
     labels
-        .attr("x", function (d) { 
-          return (d.source.x + d.target.x) / 2; 
-        })
-        .attr("y", function (d) { 
-          return (d.source.y + d.target.y) / 2; 
-        });
+      .attr("x", function (d) {
+        return (d.source.x + d.target.x) / 2;
+      })
+      .attr("y", function (d) {
+        return (d.source.y + d.target.y) / 2;
+      });
   }
 
   function mouseover() {
-    d3.select(this).transition()
-        .duration(750)
-        .attr('transform', 'scale(2)');
+    d3.select(this)
+       .transition()
+       .duration(750)
+       .attr('transform', 'scale(2)');
   }
 
   function mouseout() {
-    d3.select(this).transition()
-        .duration(750)
-        .attr('transform', 'scale(1)');
+    d3.select(this)
+       .transition()
+       .duration(750)
+       .attr('transform', 'scale(1)');
   }
 
   function sortLinks() {
@@ -399,12 +358,41 @@ function doEverything(data) {
     }
   }
 
-legend = svg.append("g")
-  .attr("class","legend")
-  .attr("transform","translate(50,30)")
-  .style("font-size","9px")
-  .call(d3.legend)
+  legend = svg.append("g")
+    .attr("class","legend")
+    .attr("transform","translate(50,30)")
+    .style("font-size","9px")
+    .call(d3.legend);
 
+}
+
+
+//grey out node function
+//select neighbor nodes
+//highlight node
+
+function greyOutNode(node, on_or_off) {
+  if (on_or_off) {
+    node.grayed_out=true;
+  }
+  else {
+    node.grayed_out=false;
+  }
+}
+
+function greyOutAll(on_or_off) {
+  d3.selectAll('.node').classed('active', function(d) {
+    greyOutNode(d, on_or_off);
+    return false;
+  });
+
+  d3.selectAll('text').classed('active', function(d) {
+    return false;
+  });
+
+  d3.selectAll('.link').classed('active', function(d) {
+    return false;
+  });
 }
 
 /**
@@ -428,39 +416,7 @@ legend = svg.append("g")
  *
  * @return
  *   new color
- **/
-
-//grey out node function
-//select neighbor nodes
-//highlight node
-
-function greyOutNode(node, on_or_off)
-{
-    if(on_or_off){
-      node.grayed_out=true;
-    }
-    else{
-      node.grayed_out=false;
-    }
-}
-
-function greyOutAll(on_or_off)
-{
-  d3.selectAll('.node').classed('active', function(d){
-   greyOutNode(d,on_or_off);
-    return false;
-  })
-
-   d3.selectAll('text').classed('active', function(d) {
-    return false;
-   })
-
-   d3.selectAll('.link').classed('active', function(d) {
-    return false;
-    })
-}
-
-
+ */
 function toggle_node(d, index, context, on_or_off) {
   var thiiiiiis = (context ? context : this);
   d.toggled = !d.toggled;
@@ -474,8 +430,6 @@ function toggle_node(d, index, context, on_or_off) {
 
   return toggleColor;
 }
-
-
 
 function highlight_neighbor_nodes(center_node_id, center_node_label, neighbors) {
   d3.selectAll('.node').classed('active', function (d) {
