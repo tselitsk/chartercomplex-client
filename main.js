@@ -364,6 +364,8 @@ function doEverything(data) {
     .style("font-size","9px")
     .call(d3.legend);
 
+  // Build filter widget
+  build_year_filter_widget('#filters', get_all_start_years(data.links));
 }
 
 
@@ -465,5 +467,87 @@ function highlight_neighbor_nodes(center_node_id, center_node_label, neighbors) 
       }
     }
   });
+}
+
+/**
+ * Given data.links, return chronologically sorted array of years.
+ *
+ * @param links
+ *   data.links
+ *
+ * @return
+ *   array of year integers
+ */
+function get_all_start_years(links) {
+  return _.uniq(
+    _.reduce(links, function(memo, link) {
+      if (link.startyear !== null) {
+        memo.push(link.startyear);
+      }
+      return memo;
+    }, [])
+  ).sort();
+}
+
+/**
+ * Build year filter widget.
+ *
+ * Via http://jsfiddle.net/zhanghuancs/cuYu8/
+ *
+ * @param container_selector
+ *   string to use as d3 selector for element in which to build widget
+ */
+function build_year_filter_widget(container_selector, year_opts) {
+  d3.select(container_selector)
+    .selectAll('div')
+    .data(year_opts)
+    .enter()
+    .append('label')
+    .each(function(d) {
+      d3.select(this)
+        .append('input')
+        .attr('type', 'checkbox')
+        .attr('checked', true)
+        .on('click', function(d) {
+          filter_graph_by_year(d, (this.checked ? 'visible' : 'hidden'));
+        })
+      d3.select(this)
+        .append('span')
+        .text(function(d) {
+          return d;
+        });
+    });
+}
+
+/**
+ * @param year
+ *   integer selected year
+ *
+ * @param visiblity
+ *   string css visibility value
+ */
+function filter_graph_by_year(year, visibility) {
+  d3.selectAll('.link')
+    .style('visibility', function(d, i) {
+      data.links[i].visibility = (d.startyear == year ? visibility : $(this).css('visibility'));
+      return data.links[i].visibility;
+    });
+
+  d3.selectAll('.node')
+    .style('visibility', function(d_node) {
+      var hide_this = true;
+      d3.selectAll('.link')
+        .each(function(d_link, i) {
+          if (d_link.source === d_node || d_link.target === d_node) {
+            if (this.style.visibility == 'visible') {
+              hide_this = false;
+              return 'visible';
+            }
+          }
+        });
+      if (hide_this) {
+        return 'hidden';
+      }
+    });
 }
 
