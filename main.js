@@ -496,6 +496,9 @@ function get_all_start_years(links) {
  *
  * @param container_selector
  *   string to use as d3 selector for element in which to build widget
+ *
+ * @param year_opts
+ *   array of years to offer as options
  */
 function build_year_filter_widget(container_selector, year_opts) {
   d3.select(container_selector)
@@ -520,10 +523,14 @@ function build_year_filter_widget(container_selector, year_opts) {
 }
 
 /**
+ * Find links in the network graph with startdate year,
+ * and hide (or show) them along with their labels and
+ * potentially orphaned nodes.
+ *
  * @param year
  *   integer selected year
  *
- * @param visiblity
+ * @param visibility
  *   string css visibility value
  */
 function filter_graph_by_year(year, visibility) {
@@ -540,16 +547,13 @@ function filter_graph_by_year(year, visibility) {
           return d_text == d;
         }).style('visibility', 'visible');
       }
-      if (/*d.visibility == 'hidden'
-          &&*/ d.target.name == 'Michigan Education Choice Center (MECC)') {
-        //debugger;
-      }
       return d.visibility;
     });
 
   d3.selectAll('.node')
     .style('visibility', function(d_node, i_node) {
       var hide_this = true;
+      // If any of this node's links are visible, this node shouldn't be hidden.
       d3.selectAll('.link')
         .each(function(d_link, i_link) {
           if (d_link.source === d_node || d_link.target === d_node) {
