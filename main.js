@@ -529,8 +529,22 @@ function build_year_filter_widget(container_selector, year_opts) {
 function filter_graph_by_year(year, visibility) {
   d3.selectAll('.link')
     .style('visibility', function(d, i) {
-      data.links[i].visibility = (d.startyear == year ? visibility : $(this).css('visibility'));
-      return data.links[i].visibility;
+      d.visibility = (d.startyear == year ? visibility : $(this).css('visibility'));
+      // hide corresponding text label
+      if (d.visibility == 'hidden') {
+        d3.selectAll('text').filter(function(d_text) {
+          return d_text == d;
+        }).style('visibility', 'hidden');
+      } else {
+        d3.selectAll('text').filter(function(d_text) {
+          return d_text == d;
+        }).style('visibility', 'visible');
+      }
+      if (/*d.visibility == 'hidden'
+          &&*/ d.target.name == 'Michigan Education Choice Center (MECC)') {
+        //debugger;
+      }
+      return d.visibility;
     });
 
   d3.selectAll('.node')
@@ -541,13 +555,15 @@ function filter_graph_by_year(year, visibility) {
           if (d_link.source === d_node || d_link.target === d_node) {
             if (this.style.visibility == 'visible') {
               hide_this = false;
-              d3.select(d3.selectAll('text')[0][i_link]).style('visibility', 'hidden');
+              d3.selectAll('text')
+                .filter(function (d_text) { return d_text == d_link; })
+                .style('visibility', 'visible');
               return 'visible';
             }
           }
         });
       if (hide_this) {
-
+/*
         d3.selectAll('text').style('visibility', function (d_text) {
           if (d_text.hasOwnProperty('source') || d_text.hasOwnProperty('target')) {
 
@@ -569,7 +585,7 @@ function filter_graph_by_year(year, visibility) {
             return 'visible';
           }
         });
-
+*/
         return 'hidden';
       }
     });
