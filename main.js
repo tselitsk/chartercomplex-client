@@ -563,30 +563,15 @@ function filter_graph_by_year(year, visibility) {
           }
         });
       if (hide_this) {
-/*
-        d3.selectAll('text').style('visibility', function (d_text) {
-          if (d_text.hasOwnProperty('source') || d_text.hasOwnProperty('target')) {
-
-            var source_is_hidden = ($(d3.selectAll('.node').filter(function(d) {
-              return d.id == d_text.source.id;
-             })[0]).css('visibility') == 'hidden');
-
-            var target_is_hidden = ($(d3.selectAll('.node').filter(function(d) {
-              return d.id == d_text.target.id;
-            })[0]).css('visibility') == 'hidden');
-
-            if (source_is_hidden || target_is_hidden) {
-              return 'hidden';
-            } else {
-              return 'visible';
-            }
-          } else {
-            // it is node
-            return 'visible';
-          }
-        });
-*/
+        d3.selectAll('text')
+          .filter(function (d_text) { return d_text == d_node; })
+          .style('visibility', 'hidden');
         return 'hidden';
+      } else {
+        d3.selectAll('text')
+          .filter(function (d_text) { return d_text == d_node; })
+          .style('visibility', 'visible');
+        return 'visible';
       }
     });
 }
