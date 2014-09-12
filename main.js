@@ -103,12 +103,10 @@ $('#treeview').jstree({
   });
 
   $('#treeview').on('select_node.jstree', function (e, jstree_node) {
-    d3.selectAll(".node").style("fill", function (d) {
+    d3.selectAll(".node").each(function (d) {
       if (d.name == jstree_node.node.text) {
         var context = this;
-        return toggle_node(d, null, context);
-      } else {
-        return d.fillColor;
+        toggle_node(d, null, context);
       }
     });
   });
@@ -403,7 +401,7 @@ function greyOutAll(on_or_off) {
  *
  * Needs context `this` as current DOM element
  *
- * @param d
+ * @param node_to_toggle
  *   d3 data object
  *
  * @param index
@@ -412,25 +410,20 @@ function greyOutAll(on_or_off) {
  * @param context
  *   if u don't want the function to use `this`
  *
- * @param on_or_off
- *   if provided, set node as not-greyed-out (on) or greyed-out (off)a
- *   if not provided, function will just toggle the node
- *
  * @return
- *   new color
+ *   true is it works
  */
-function toggle_node(d, index, context, on_or_off) {
+function toggle_node(node_to_toggle, index, context) {
   var thiiiiiis = (context ? context : this);
-  d.toggled = !d.toggled;
-  var toggleColor = (d.toggled ? d.fillColor : "yellow");
-  d3.select(thiiiiiis).style("fill", toggleColor);
+  node_to_toggle.toggled = true;
+  d3.select(thiiiiiis).style('fill', 'yellow');
+  d3.selectAll('.node')
+    .filter(function(d_node) { return d_node != node_to_toggle; })
+    .style('fill', function(d_node) { return d_node.fillColor; });
 
-  highlight_neighbor_nodes(d.id, d.name, d.neighbors);
-  /*
-  highlight_neighbor_edges(d.source.id, d.label, d.source.neighbors);
-  */
+  highlight_neighbor_nodes(node_to_toggle.id, node_to_toggle.name, node_to_toggle.neighbors);
 
-  return toggleColor;
+  return true;
 }
 
 function highlight_neighbor_nodes(center_node_id, center_node_label, neighbors) {
