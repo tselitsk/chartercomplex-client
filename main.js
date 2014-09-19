@@ -148,6 +148,9 @@ function doEverything(data) {
           return colorLink;
       })
 
+/**
+ * turn off link tooltips on graph and only display in labelsContainer
+
       .call(d3.helper.tooltip()
         .attr({class: function (d, i) {
           return d + ' ' +  i + ' A';
@@ -157,16 +160,48 @@ function doEverything(data) {
           return 'citation: ' + d.citation;
         })
       )
+*/
 
-        .on('mouseover', function (d, i) {
-          d3.select(this).style({fill: 'red'});
+/**
+ * Selects a single link, changes color on rollover, and populates sidebar with link attributes
+ *
+ * Uses `this` current DOM element
+ *
+ * @param d
+ *   d3 data object  
+ *
+ * @return
+ *   original link color
+ */
+        .on('mouseover', function (d) {
+          d3.select(this).style({stroke: 'yellow'});
+            
+          document.getElementById("labelsContainer").innerHTML = d.source.name + " <br />"
+            + " is linked to <br />" 
+            + d.target.name + " <br />"
+            + "Relationship: " + d.label + " <br />"
+            + "Citation: " + d.citation;
         })
-        .on('mouseout', function (d, i) {
-          d3.select(this).style({fill: 'blue'});
+
+        .on('mouseout', function (d) {
+          d3.select(this).style("stroke", function (d) {
+            var colorLink;
+              if (d.tags == "Grant") {
+                colorLink = "green";
+              }
+              else {
+                colorLink = "black";
+              }
+            d.stroke = colorLink;
+              return colorLink;
+          });
         });
 
   sortLinks();
   setLinkIndexAndNum();
+
+/**
+ * turn off link labels on graph and only display in labelsContainer
 
   var labels = svg.selectAll('text')
       .data(data.links)
@@ -181,6 +216,7 @@ function doEverything(data) {
       .text(function (d) {
         return d.label;
       });
+*/
 
   var node = svg.selectAll(".node")
       .append('g').data(force.nodes());
@@ -292,6 +328,9 @@ function doEverything(data) {
         return "translate(" + d.x + "," + d.y + ")";
       });
 
+/**
+ * turn off link labels on graph and only display in labelsContainer
+
     labels
       .attr("x", function (d) {
         return (d.source.x + d.target.x) / 2;
@@ -299,6 +338,7 @@ function doEverything(data) {
       .attr("y", function (d) {
         return (d.source.y + d.target.y) / 2;
       });
+*/      
   }
 
   function mouseover() {
