@@ -18,8 +18,6 @@ d3.jsonp(protocol + '://chartercomplex-server.herokuapp.com/nodes.json?callback=
       l.target = nodeIds.indexOf(l.target);
     });
 
-    tree(window.data);
-
     doEverything(window.data);
 
   });
@@ -60,20 +58,6 @@ function addNeighborsToNodes(nodes, edges, degree) {
   return newnodes;
 }
 
-function tree(data) {
-  // build jstree data:
-  var cat_names = _.uniq(_.map(_.pluck(data.nodes, 't'), function (name) {
-    return normalize_cat_name(name);
-  }));
-  var categories = [];
-  _.each(cat_names, function (category) {
-    categories.push({
-      "id" : normalize_cat_name(category),
-      "parent" : "#",
-      "text" : category
-    });
-  });
-
 /**
  * Toggle a single node by its D3 index.
  *
@@ -95,22 +79,6 @@ function selectNode(id) {
       'text': node.name
     });
   });
-
-$('#treeview').jstree({
-    'core': {
-      'data' : categories
-    }
-  });
-
-  $('#treeview').on('select_node.jstree', function (e, jstree_node) {
-    d3.selectAll(".node").each(function (d) {
-      if (d.name == jstree_node.node.text) {
-        var context = this;
-        toggle_node(d, null, context);
-      }
-    });
-  });
-}
 
 function doEverything(data) {
 
@@ -149,7 +117,7 @@ function doEverything(data) {
       })
 
 /**
- * turn off link tooltips on graph and only display in labelsContainer
+ * Turn off link tooltips on graph and only display in labelsContainer
 
       .call(d3.helper.tooltip()
         .attr({class: function (d, i) {
@@ -163,7 +131,8 @@ function doEverything(data) {
 */
 
 /**
- * Selects a single link, changes color on rollover, and populates sidebar with link attributes
+ * When a node is highlighted...
+ * Select a single link connected to that node, change its' color on rollover, and populate sidebar with attributes
  *
  * Uses `this` current DOM element
  *
