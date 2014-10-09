@@ -72,14 +72,6 @@ function selectNode(id) {
     .each(toggle_node);
 }
 
-  _.each(data.nodes, function (node) {
-    categories.push({
-      'id': node.id,
-      'parent': normalize_cat_name(node.t),
-      'text': node.name
-    });
-  });
-
 function doEverything(data) {
 
   var width = window.innerWidth,
