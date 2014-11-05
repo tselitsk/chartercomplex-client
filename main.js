@@ -58,20 +58,6 @@ function addNeighborsToNodes(nodes, edges, degree) {
   return newnodes;
 }
 
-/**
- * Toggle a single node by its D3 index.
- *
- * @param id
- *   d3.js id
- */
-function selectNode(id) {
-  d3.selectAll('.node')
-    .filter(function (d, i) {
-      return d.id == id
-    })
-    .each(toggle_node);
-}
-
 function doEverything(data) {
 
   var width = window.innerWidth,
