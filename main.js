@@ -79,47 +79,20 @@ function doEverything(data) {
       .attr("height", height);
 
   var link = svg.selectAll(".link")
-      .data(force.links())
-      .enter().append("svg:path")
-      .attr("class", "link")
-      .style("stroke", function (d) {
-        var colorLink;
-          if (d.tags == "Grant") {
-            colorLink = "green";
-          }
-          else {
-            colorLink = "black";
-          }
-          d.stroke = colorLink;
-          return colorLink;
-      })
-
-/**
- * Turn off link tooltips on graph and only display in labelsContainer
-
-      .call(d3.helper.tooltip()
-        .attr({class: function (d, i) {
-          return d + ' ' +  i + ' A';
-        }})
-        .style({color: 'black'})
-        .text(function (d, i) {
-          return 'citation: ' + d.citation;
+        .data(force.links())
+        .enter().append("svg:path")
+        .attr("class", "link")
+        .style("stroke", function (d) {
+          var colorLink;
+            if (d.tags == "Grant") {
+              colorLink = "green";
+            }
+            else {
+              colorLink = "black";
+            }
+            d.stroke = colorLink;
+            return colorLink;
         })
-      )
-*/
-
-/**
- * When a node is highlighted...
- * Select a single link connected to that node, change its' color on rollover, and populate sidebar with attributes
- *
- * Uses `this` current DOM element
- *
- * @param d
- *   d3 data object  
- *
- * @return
- *   original link color
- */
         .on('mouseover', function (d) {
           d3.select(this).style({stroke: 'yellow'});
             
