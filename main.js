@@ -120,24 +120,6 @@ function doEverything(data) {
   sortLinks();
   setLinkIndexAndNum();
 
-/**
- * turn off link labels on graph and only display in labelsContainer
-
-  var labels = svg.selectAll('text')
-      .data(data.links)
-      .enter().append('text')
-      .attr("x", function (d) {
-        return (d.source.y + d.target.y) / 2;
-      })
-      .attr("y", function (d) {
-        return (d.source.x + d.target.x) / 2;
-      })
-      .attr("text-anchor", "middle")
-      .text(function (d) {
-        return d.label;
-      });
-*/
-
   var node = svg.selectAll(".node")
       .append('g').data(force.nodes());
 
@@ -248,17 +230,6 @@ function doEverything(data) {
         return "translate(" + d.x + "," + d.y + ")";
       });
 
-/**
- * turn off link labels on graph and only display in labelsContainer
-
-    labels
-      .attr("x", function (d) {
-        return (d.source.x + d.target.x) / 2;
-      })
-      .attr("y", function (d) {
-        return (d.source.y + d.target.y) / 2;
-      });
-*/      
   }
 
   function mouseover() {
@@ -324,35 +295,6 @@ function doEverything(data) {
 
   // Build filter widget
   build_year_filter_widget('#filters', get_all_start_years(data.links));
-}
-
-
-//grey out node function
-//select neighbor nodes
-//highlight node
-
-function greyOutNode(node, on_or_off) {
-  if (on_or_off) {
-    node.grayed_out=true;
-  }
-  else {
-    node.grayed_out=false;
-  }
-}
-
-function greyOutAll(on_or_off) {
-  d3.selectAll('.node').classed('active', function(d) {
-    greyOutNode(d, on_or_off);
-    return false;
-  });
-
-  d3.selectAll('text').classed('active', function(d) {
-    return false;
-  });
-
-  d3.selectAll('.link').classed('active', function(d) {
-    return false;
-  });
 }
 
 /**
