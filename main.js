@@ -58,20 +58,6 @@ function addNeighborsToNodes(nodes, edges, degree) {
   return newnodes;
 }
 
-/**
- * Toggle a single node by its D3 index.
- *
- * @param id
- *   d3.js id
- */
-function selectNode(id) {
-  d3.selectAll('.node')
-    .filter(function (d, i) {
-      return d.id == id
-    })
-    .each(toggle_node);
-}
-
 function doEverything(data) {
 
   var width = window.innerWidth,
@@ -93,47 +79,20 @@ function doEverything(data) {
       .attr("height", height);
 
   var link = svg.selectAll(".link")
-      .data(force.links())
-      .enter().append("svg:path")
-      .attr("class", "link")
-      .style("stroke", function (d) {
-        var colorLink;
-          if (d.tags == "Grant") {
-            colorLink = "green";
-          }
-          else {
-            colorLink = "black";
-          }
-          d.stroke = colorLink;
-          return colorLink;
-      })
-
-/**
- * Turn off link tooltips on graph and only display in labelsContainer
-
-      .call(d3.helper.tooltip()
-        .attr({class: function (d, i) {
-          return d + ' ' +  i + ' A';
-        }})
-        .style({color: 'black'})
-        .text(function (d, i) {
-          return 'citation: ' + d.citation;
+        .data(force.links())
+        .enter().append("svg:path")
+        .attr("class", "link")
+        .style("stroke", function (d) {
+          var colorLink;
+            if (d.tags == "Grant") {
+              colorLink = "green";
+            }
+            else {
+              colorLink = "black";
+            }
+            d.stroke = colorLink;
+            return colorLink;
         })
-      )
-*/
-
-/**
- * When a node is highlighted...
- * Select a single link connected to that node, change its' color on rollover, and populate sidebar with attributes
- *
- * Uses `this` current DOM element
- *
- * @param d
- *   d3 data object  
- *
- * @return
- *   original link color
- */
         .on('mouseover', function (d) {
           d3.select(this).style({stroke: 'yellow'});
             
@@ -160,24 +119,6 @@ function doEverything(data) {
 
   sortLinks();
   setLinkIndexAndNum();
-
-/**
- * turn off link labels on graph and only display in labelsContainer
-
-  var labels = svg.selectAll('text')
-      .data(data.links)
-      .enter().append('text')
-      .attr("x", function (d) {
-        return (d.source.y + d.target.y) / 2;
-      })
-      .attr("y", function (d) {
-        return (d.source.x + d.target.x) / 2;
-      })
-      .attr("text-anchor", "middle")
-      .text(function (d) {
-        return d.label;
-      });
-*/
 
   var node = svg.selectAll(".node")
       .append('g').data(force.nodes());
@@ -289,17 +230,6 @@ function doEverything(data) {
         return "translate(" + d.x + "," + d.y + ")";
       });
 
-/**
- * turn off link labels on graph and only display in labelsContainer
-
-    labels
-      .attr("x", function (d) {
-        return (d.source.x + d.target.x) / 2;
-      })
-      .attr("y", function (d) {
-        return (d.source.y + d.target.y) / 2;
-      });
-*/      
   }
 
   function mouseover() {
@@ -365,35 +295,6 @@ function doEverything(data) {
 
   // Build filter widget
   build_year_filter_widget('#filters', get_all_start_years(data.links));
-}
-
-
-//grey out node function
-//select neighbor nodes
-//highlight node
-
-function greyOutNode(node, on_or_off) {
-  if (on_or_off) {
-    node.grayed_out=true;
-  }
-  else {
-    node.grayed_out=false;
-  }
-}
-
-function greyOutAll(on_or_off) {
-  d3.selectAll('.node').classed('active', function(d) {
-    greyOutNode(d, on_or_off);
-    return false;
-  });
-
-  d3.selectAll('text').classed('active', function(d) {
-    return false;
-  });
-
-  d3.selectAll('.link').classed('active', function(d) {
-    return false;
-  });
 }
 
 /**
