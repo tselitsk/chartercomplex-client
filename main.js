@@ -295,6 +295,10 @@ function doEverything(data) {
 
   // Build filter widget
   build_year_filter_widget('#filters', get_all_start_years(data.links));
+
+  // Hide the orphans, after setting link visibility explicitly
+  d3.selectAll('.link').style('visibility', 'visible');
+  hide_orphans();
 }
 
 /**
@@ -445,6 +449,10 @@ function filter_graph_by_year(year, visibility) {
       return d.visibility;
     });
 
+  hide_orphans();
+}
+
+function hide_orphans() {
   d3.selectAll('.node')
     .style('visibility', function(d_node, i_node) {
       var hide_this = true;
