@@ -342,7 +342,7 @@ function doEverything(data) {
  *   if u don't want the function to use `this`
  *
  * @return
- *   true is it works
+ *   true if it works
  */
 function toggle_node(node_to_toggle, index, context) {
   var thiiiiiis = (context ? context : this);
@@ -352,12 +352,19 @@ function toggle_node(node_to_toggle, index, context) {
     .filter(function(d_node) { return d_node != node_to_toggle; })
     .style('fill', function(d_node) { return d_node.fillColor; });
 
-  highlight_neighbor_nodes(node_to_toggle.id, node_to_toggle.name, node_to_toggle.neighbors);
+  highlight_neighbor_nodes(node_to_toggle.id, node_to_toggle.neighbors);
 
   return true;
 }
 
-function highlight_neighbor_nodes(center_node_id, center_node_label, neighbors) {
+/**
+ * Given the d3 id of a node in our data, highlight its neighbors
+ *
+ * @param center_node_id
+ * @param neighbors
+ * @return null
+ */
+function highlight_neighbor_nodes(center_node_id, neighbors) {
   d3.selectAll('.node').classed('active', function (d) {
     if (d.id !== center_node_id && !_.contains(neighbors, d.id)) {
       d.grayed_out == true;
