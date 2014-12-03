@@ -82,6 +82,9 @@ function doEverything(data) {
         .data(force.links())
         .enter().append("svg:path")
         .attr("class", "link")
+        .each(function(d) {
+          d.grayed_out = true;
+        })
         .style("stroke", function (d) {
           var colorLink;
             if (d.tags == "Grant") {
@@ -93,14 +96,17 @@ function doEverything(data) {
             d.stroke = colorLink;
             return colorLink;
         })
+
         .on('mouseover', function (d) {
-          d3.select(this).style({stroke: 'yellow'});
-            
-          document.getElementById("labelsContainer").innerHTML = d.source.name + " <br />"
-            + " is linked to <br />" 
-            + d.target.name + " <br />"
-            + "Relationship: " + d.label + " <br />"
-            + "Citation: " + d.citation;
+          if (d.grayed_out == false) {
+            d3.select(this).style({stroke: 'yellow'});
+
+            document.getElementById("labelsContainer").innerHTML = d.source.name + " <br />"
+              + " is linked to <br />" 
+              + d.target.name + " <br />"
+              + "Relationship: " + d.label + " <br />"
+              + "Citation: " + d.citation;
+          }
         })
 
         .on('mouseout', function (d) {
@@ -295,6 +301,10 @@ function doEverything(data) {
 
   // Build filter widget
   build_year_filter_widget('#filters', get_all_start_years(data.links));
+
+  // Hide the orphans, after setting link visibility explicitly
+  d3.selectAll('.link').style('visibility', 'visible');
+  hide_orphans();
 }
 
 /**
@@ -356,8 +366,10 @@ function highlight_neighbor_nodes(center_node_id, center_node_label, neighbors) 
   d3.selectAll('.link').classed('active', function (d) {
     if (d.hasOwnProperty('source') || d.hasOwnProperty('target')) {
       if (d.source.id == center_node_id || d.target.id == center_node_id) {
+        d.grayed_out = false;
         return true;
       } else {
+        d.grayed_out = true;
         return false;
       }
     }
@@ -445,6 +457,10 @@ function filter_graph_by_year(year, visibility) {
       return d.visibility;
     });
 
+  hide_orphans();
+}
+
+function hide_orphans() {
   d3.selectAll('.node')
     .style('visibility', function(d_node, i_node) {
       var hide_this = true;
