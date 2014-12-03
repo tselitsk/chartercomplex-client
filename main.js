@@ -74,11 +74,29 @@ function doEverything(data) {
 
   data.nodes = addNeighborsToNodes(data.nodes, data.links, 1);
 
+  var zoom = d3.behavior.zoom()
+      .scaleExtent([1, 10])
+      .on("zoom", zoomed);
+
   var svg = d3.select("#graph").append("svg")
       .attr("width", width)
-      .attr("height", height);
+      .attr("height", height)
+      .append("g")
+      .attr("transform", "translate(0,0)")
+      .call(zoom);
 
-  var link = svg.selectAll(".link")
+  var rect = svg.append("rect")
+      .attr("width", width)
+      .attr("height", height)
+      .style("fill", "none")
+      .style("pointer-events", "all");
+
+  var group = svg.append('g');
+
+  function zoomed() {
+    group.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+  }
+  var link = group.selectAll(".link")
         .data(force.links())
         .enter().append("svg:path")
         .attr("class", "link")
@@ -128,7 +146,7 @@ function doEverything(data) {
   sortLinks();
   setLinkIndexAndNum();
 
-  var node = svg.selectAll(".node")
+  var node = group.selectAll(".node")
       .append('g').data(force.nodes());
 
   node.enter().append("g")
@@ -207,8 +225,7 @@ function doEverything(data) {
       })
       .on("mouseover", mouseover)
       .on("mouseout", mouseout)
-      .on("click", toggle_node)
-      .call(force.drag);
+      .on("click", toggle_node);
 
   node.append("text")
       .style("fill", "black")
@@ -295,7 +312,7 @@ function doEverything(data) {
     }
   }
 
-  legend = svg.append("g")
+  legend = group.append("g")
     .attr("class","legend")
     .attr("transform","translate(50,30)")
     .style("font-size","9px")
