@@ -78,12 +78,16 @@ function doEverything(data) {
       .scaleExtent([1, 10])
       .on("zoom", zoomed);
 
+  window.zoom = zoom;
+
   var svg = d3.select("#graph").append("svg")
       .attr("width", width)
       .attr("height", height)
       .append("g")
       .attr("transform", "translate(0,0)")
       .call(zoom);
+
+   window.svg = svg;
 
   var rect = svg.append("rect")
       .attr("width", width)
@@ -359,19 +363,42 @@ function toggle_node(node_to_toggle, index, context) {
 
 /**
  * Given the d3 id of a node in our data, highlight its neighbors
+ * and set zoom and pan to focus on this neighborhood.
  *
  * @param center_node_id
  * @param neighbors
  * @return null
  */
 function highlight_neighbor_nodes(center_node_id, neighbors) {
+  var extant = {
+    x:[],
+    y:[]
+  };
+
+  var width = window.innerWidth,
+      height = window.innerHeight;
+
   d3.selectAll('.node').classed('active', function (d) {
     if (d.id !== center_node_id && !_.contains(neighbors, d.id)) {
       d.grayed_out == true;
       return false;
     }
+    extant.x.push(d.x);
+    extant.y.push(d.y);
     return true;
   });
+
+  var dx = _.max(extant.x) - _.min(extant.x),
+      dy = _.max(extant.y) - _.min(extant.y),
+      x = (_.max(extant.x) + _.min(extant.x)) / 2,
+      y = (_.max(extant.y) + _.min(extant.y)) / 2,
+      scale = .76 / Math.max(dx / width, dy / height), // .76 is nice @todo include labels in extant?
+      translate = [width / 2 - scale * x, height / 2 - scale * y];
+
+  svg.transition()
+      .duration(750)
+      .call(zoom.translate(translate).scale(scale).event);
+
 
   d3.selectAll('text').classed('active', function (d) {
     if (d.hasOwnProperty('source') || d.hasOwnProperty('target')) {
