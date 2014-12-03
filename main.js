@@ -100,6 +100,7 @@ function doEverything(data) {
         .on('mouseover', function (d) {
           if (d.grayed_out == false) {
             d3.select(this).style({stroke: 'yellow'});
+            this.style.strokeWidth = '6px';
 
             document.getElementById("labelsContainer").innerHTML = d.source.name + " <br />"
               + " is linked to <br />" 
@@ -112,14 +113,15 @@ function doEverything(data) {
         .on('mouseout', function (d) {
           d3.select(this).style("stroke", function (d) {
             var colorLink;
-              if (d.tags == "Grant") {
-                colorLink = "green";
-              }
-              else {
-                colorLink = "black";
-              }
+            if (d.tags == "Grant") {
+              colorLink = "green";
+            }
+            else {
+              colorLink = "black";
+            }
+            this.style.strokeWidth = '1px';
             d.stroke = colorLink;
-              return colorLink;
+            return colorLink;
           });
         });
 
