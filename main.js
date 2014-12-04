@@ -100,6 +100,7 @@ function doEverything(data) {
   function zoomed() {
     group.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
   }
+  
   var link = group.selectAll(".link")
         .data(force.links())
         .enter().append("svg:path")
@@ -124,7 +125,7 @@ function doEverything(data) {
             d3.select(this).style({stroke: 'yellow'});
             this.style.strokeWidth = '6px';
 
-            document.getElementById("labelsContainer").innerHTML = d.source.name + " <br />"
+            document.getElementById("labels").innerHTML = d.source.name + " <br />"
               + " is linked to <br />" 
               + d.target.name + " <br />"
               + "Relationship: " + d.label + " <br />"
@@ -224,9 +225,6 @@ function doEverything(data) {
         d.toggled = false;
         return colorStr;
       })
-      .attr("data-legend",function (d) {
-        return d.t;
-      })
       .on("mouseover", mouseover)
       .on("mouseout", mouseout)
       .on("click", toggle_node);
@@ -316,12 +314,6 @@ function doEverything(data) {
     }
   }
 
-  legend = group.append("g")
-    .attr("class","legend")
-    .attr("transform","translate(50,30)")
-    .style("font-size","9px")
-    .call(d3.legend);
-
   // Build filter widget
   build_year_filter_widget('#filters', get_all_start_years(data.links));
 
@@ -398,7 +390,6 @@ function highlight_neighbor_nodes(center_node_id, neighbors) {
   svg.transition()
       .duration(750)
       .call(zoom.translate(translate).scale(scale).event);
-
 
   d3.selectAll('text').classed('active', function (d) {
     if (d.hasOwnProperty('source') || d.hasOwnProperty('target')) {
@@ -543,4 +534,3 @@ function hide_orphans() {
       }
     });
 }
-

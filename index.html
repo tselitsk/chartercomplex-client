@@ -27,24 +27,9 @@ text {
   pointer-events: none;
 }
 
-.legend rect {
-  fill:white;
-  stroke:black;
-  opacity:.8;
-}
-
 #main
 {
   width:100%;
-}
-
-#treeContainer
-{
- display: inline;
- float:left;
- width:350px;
- margin-left: 20px;
- margin-top: 0;
 }
 
 #graphContainer
@@ -55,26 +40,21 @@ text {
  margin-left: 0;
 }
 
-#filters {
+.widgets {
   display: block;
   position: absolute;
-  bottom: 5px;
-  right: 5px;
-  width: 300px;
-  height: 200px;
-  border: 1px solid green;
-  background: white;
-}
-
-#labelsContainer {
-  display: block;
-  margin-top: 120px;
-  position: absolute;
-  border: 1px solid black;
   float: left;
   width: 200px;
-  height: 70%;
-  padding-left: 20px;
+  height: auto;
+}
+
+#filters,
+#labels {
+  border: 1px solid black;
+  background: white;
+  margin: 10px;
+  padding: 10px;
+  word-wrap: break-word;
 }
 
 #graph {
@@ -112,31 +92,21 @@ text.active {
   color: #000;
 }
 
-g.legend text {
-  opacity: 1;
-  fill: #000;
-}
-
 </style>
   <body>
   <div id="main">
-    
-    <div id="treeContainer">
-      <div id="treeview">
-      </div><!--tree-->
-    </div><!--treeContainer-->
 
     <div id="graphContainer">
       <div id="graph">
-      </div> <!--graph-->
-    </div> <!--graphContainer-->
-
-    <div id="filters">
-
+      </div>
     </div>
 
-    <div id="labelsContainer">
-    </div> <!--labelsContainer-->
+    <div class="widgets">
+      <div id="filters">
+      </div>
+      <div id="labels">
+      </div>
+    </div>
 
   </div> <!--main-->
 <script src="main.js"></script>
