@@ -74,11 +74,33 @@ function doEverything(data) {
 
   data.nodes = addNeighborsToNodes(data.nodes, data.links, 1);
 
+  var zoom = d3.behavior.zoom()
+      .scaleExtent([1, 10])
+      .on("zoom", zoomed);
+
+  window.zoom = zoom;
+
   var svg = d3.select("#graph").append("svg")
       .attr("width", width)
-      .attr("height", height);
+      .attr("height", height)
+      .append("g")
+      .attr("transform", "translate(0,0)")
+      .call(zoom);
 
-  var link = svg.selectAll(".link")
+   window.svg = svg;
+
+  var rect = svg.append("rect")
+      .attr("width", width)
+      .attr("height", height)
+      .style("fill", "none")
+      .style("pointer-events", "all");
+
+  var group = svg.append('g');
+
+  function zoomed() {
+    group.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+  }
+  var link = group.selectAll(".link")
         .data(force.links())
         .enter().append("svg:path")
         .attr("class", "link")
@@ -128,7 +150,7 @@ function doEverything(data) {
   sortLinks();
   setLinkIndexAndNum();
 
-  var node = svg.selectAll(".node")
+  var node = group.selectAll(".node")
       .append('g').data(force.nodes());
 
   node.enter().append("g")
@@ -207,8 +229,7 @@ function doEverything(data) {
       })
       .on("mouseover", mouseover)
       .on("mouseout", mouseout)
-      .on("click", toggle_node)
-      .call(force.drag);
+      .on("click", toggle_node);
 
   node.append("text")
       .style("fill", "black")
@@ -295,7 +316,7 @@ function doEverything(data) {
     }
   }
 
-  legend = svg.append("g")
+  legend = group.append("g")
     .attr("class","legend")
     .attr("transform","translate(50,30)")
     .style("font-size","9px")
@@ -325,7 +346,7 @@ function doEverything(data) {
  *   if u don't want the function to use `this`
  *
  * @return
- *   true is it works
+ *   true if it works
  */
 function toggle_node(node_to_toggle, index, context) {
   var thiiiiiis = (context ? context : this);
@@ -335,19 +356,49 @@ function toggle_node(node_to_toggle, index, context) {
     .filter(function(d_node) { return d_node != node_to_toggle; })
     .style('fill', function(d_node) { return d_node.fillColor; });
 
-  highlight_neighbor_nodes(node_to_toggle.id, node_to_toggle.name, node_to_toggle.neighbors);
+  highlight_neighbor_nodes(node_to_toggle.id, node_to_toggle.neighbors);
 
   return true;
 }
 
-function highlight_neighbor_nodes(center_node_id, center_node_label, neighbors) {
+/**
+ * Given the d3 id of a node in our data, highlight its neighbors
+ * and set zoom and pan to focus on this neighborhood.
+ *
+ * @param center_node_id
+ * @param neighbors
+ * @return null
+ */
+function highlight_neighbor_nodes(center_node_id, neighbors) {
+  var extant = {
+    x:[],
+    y:[]
+  };
+
+  var width = window.innerWidth,
+      height = window.innerHeight;
+
   d3.selectAll('.node').classed('active', function (d) {
     if (d.id !== center_node_id && !_.contains(neighbors, d.id)) {
       d.grayed_out == true;
       return false;
     }
+    extant.x.push(d.x);
+    extant.y.push(d.y);
     return true;
   });
+
+  var dx = _.max(extant.x) - _.min(extant.x),
+      dy = _.max(extant.y) - _.min(extant.y),
+      x = (_.max(extant.x) + _.min(extant.x)) / 2,
+      y = (_.max(extant.y) + _.min(extant.y)) / 2,
+      scale = .76 / Math.max(dx / width, dy / height), // .76 is nice @todo include labels in extant?
+      translate = [width / 2 - scale * x, height / 2 - scale * y];
+
+  svg.transition()
+      .duration(750)
+      .call(zoom.translate(translate).scale(scale).event);
+
 
   d3.selectAll('text').classed('active', function (d) {
     if (d.hasOwnProperty('source') || d.hasOwnProperty('target')) {
