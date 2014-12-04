@@ -125,7 +125,7 @@ function doEverything(data) {
             d3.select(this).style({stroke: 'yellow'});
             this.style.strokeWidth = '6px';
 
-            document.getElementById("labelsContainer").innerHTML = d.source.name + " <br />"
+            document.getElementById("labels").innerHTML = d.source.name + " <br />"
               + " is linked to <br />" 
               + d.target.name + " <br />"
               + "Relationship: " + d.label + " <br />"
